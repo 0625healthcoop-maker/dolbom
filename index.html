@@ -101,6 +101,53 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);color:var(--i
 .stat{flex:1;text-align:center}
 .stat-n{font-family:'Noto Serif KR',serif;font-size:1.35rem;font-weight:700;color:var(--gold2)}
 .stat-l{font-size:.63rem;color:var(--mist);margin-top:2px}
+
+/* 모달 */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:999;
+  background:rgba(10,20,15,.92);
+  align-items:center;justify-content:center;
+  padding:20px;
+}
+.modal-overlay.on{display:flex}
+.modal-box{
+  background:#fff;border-radius:20px;
+  width:100%;max-width:900px;max-height:92vh;
+  overflow-y:auto;
+  position:relative;
+  padding:28px 28px 24px;
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
+}
+.modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:18px;padding-bottom:14px;
+  border-bottom:2px solid var(--gold);
+}
+.modal-header-title{
+  font-family:'Noto Serif KR',serif;
+  font-size:1.1rem;font-weight:700;color:var(--forest);
+}
+.modal-close{
+  background:var(--forest);color:var(--gold2);
+  border:none;border-radius:8px;
+  padding:7px 14px;font-size:.8rem;font-weight:700;
+  cursor:pointer;font-family:'Noto Sans KR',sans-serif;
+}
+.modal-content{}
+.click-hint{
+  font-size:.68rem;color:var(--muted);
+  text-align:right;margin-top:6px;
+  cursor:pointer;
+}
+.click-hint:hover{color:var(--moss)}
+.wc-wrap-clickable{cursor:zoom-in}
+.wc-wrap-clickable:hover::after{
+  content:'🔍 클릭하면 크게 볼 수 있어요';
+  position:absolute;bottom:8px;right:10px;
+  font-size:.68rem;color:var(--muted);
+  background:rgba(255,255,255,.9);
+  padding:3px 8px;border-radius:6px;
+}
 </style>
 </head>
 <body>
@@ -143,6 +190,18 @@ D열: 의견·키워드"></textarea>
     <div class="sum-eye">전체 요약</div>
     <div class="sum-txt" id="sumTxt"></div>
     <div class="stat-row" id="statRow"></div>
+  </div>
+</div>
+
+
+<!-- 모달 -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-header">
+      <div class="modal-header-title" id="modalTitle"></div>
+      <button class="modal-close" onclick="closeModalDirect()">✕ 닫기</button>
+    </div>
+    <div class="modal-content" id="modalContent"></div>
   </div>
 </div>
 
@@ -254,6 +313,8 @@ function analyze(){
   // 탭 정의
   addTab(levelBar, panels, '🌐 전체 통합', ()=>buildWC(allTokens,'전체 통합 워드클라우드'));
   addTab(levelBar, panels, '≡ 전체 순위', ()=>buildRank(allTokens));
+  addTab(levelBar, panels, '🎯 공통 키워드', ()=>buildCommon(groupMap, groups));
+  addTab(levelBar, panels, '📡 기관별 비교', ()=>buildRadar(groupMap, groups));
 
   const sep1=document.createElement('div'); sep1.className='level-sep'; levelBar.appendChild(sep1);
 
@@ -336,11 +397,14 @@ function buildWC(tokens, title){
     `<div class="legend-item"><div class="legend-dot" style="background:${col.bg}"></div>${name}</div>`
   ).join('');
 
+  const wcId='wc_'+Math.random().toString(36).slice(2);
+  const modalWcHtml=`<div class="wc-wrap" style="min-height:460px"><div class="wc-canvas" style="height:460px">${words}</div></div><div class="legend">${legendHtml}</div>`;
   return `<div class="p-label">${title} · 크기 = 언급 빈도 · 색깔 = 주제 분류</div>
-    <div class="wc-wrap">
+    <div class="wc-wrap wc-wrap-clickable" onclick="openModal('${title}', \`${modalWcHtml.replace(/`/g,'\`')}\`)" style="position:relative">
       <div class="wc-canvas">${words}</div>
     </div>
-    <div class="legend">${legendHtml}</div>`;
+    <div class="legend">${legendHtml}</div>
+    <div class="click-hint" onclick="openModal('${title}', \`${modalWcHtml.replace(/`/g,'\`')}\`)">🔍 클릭해서 크게 보기</div>`;
 }
 
 function layoutWC(canvas){
@@ -415,6 +479,181 @@ function buildGroupPanel(tokens, groupName, subTables){
   }).join('');
   return wcHtml+`<div class="sub-grid">${subCards}</div>`;
 }
+
+
+// ── 공통 키워드 ──
+function buildCommon(groupMap, groups){
+  if(groups.length < 2) return '<div class="p-label">기관이 2개 이상 있어야 비교할 수 있어요</div>';
+
+  // 각 기관의 상위 키워드 set
+  const groupSets = groups.map(g => {
+    const counts = countWords(groupMap[g]);
+    return { name: g, set: new Set(counts.slice(0,30).map(w=>w[0])), counts };
+  });
+
+  // 2개 이상 기관에서 나온 키워드
+  const allWords = [...new Set(groupSets.flatMap(g=>[...g.set]))];
+  const common = allWords.map(word => {
+    const inGroups = groupSets.filter(g=>g.set.has(word)).map(g=>g.name);
+    const totalCount = groupSets.reduce((sum,g)=>{
+      const found = g.counts.find(c=>c[0]===word);
+      return sum + (found ? found[1] : 0);
+    }, 0);
+    return { word, inGroups, count: inGroups.length, totalCount };
+  }).filter(w=>w.count>=2).sort((a,b)=>b.count-a.count||b.totalCount-a.totalCount);
+
+  // 전체 공통 (모든 기관)
+  const allCommon = common.filter(w=>w.count===groups.length);
+  // 절반 이상 공통
+  const halfCommon = common.filter(w=>w.count>=Math.ceil(groups.length/2) && w.count<groups.length);
+  // 2개 이상
+  const partCommon = common.filter(w=>w.count>=2 && w.count<Math.ceil(groups.length/2));
+
+  function renderCommonWords(words, label, accent){
+    if(!words.length) return '';
+    const tags = words.slice(0,20).map(w=>{
+      const theme = classifyWord(w.word);
+      const col = THEMES[theme]||THEMES['기타'];
+      const size = 0.75 + (w.count/groups.length)*0.5;
+      return `<div style="display:inline-flex;flex-direction:column;align-items:center;margin:5px 8px">
+        <span style="font-size:${size}rem;font-weight:900;color:${col.bg};padding:4px 10px;background:${col.bg}18;border-radius:8px;border:1.5px solid ${col.bg}40">${w.word}</span>
+        <span style="font-size:.62rem;color:var(--muted);margin-top:3px">${w.inGroups.join('·')}</span>
+      </div>`;
+    }).join('');
+    return `<div style="background:#fff;border-radius:14px;border:1px solid var(--border);padding:16px 18px;margin-bottom:12px">
+      <div style="font-size:.75rem;font-weight:700;color:${accent};margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid ${accent}30">
+        ${label} <span style="font-size:.68rem;font-weight:400;color:var(--muted)">(${words.length}개)</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;align-items:flex-end">${tags}</div>
+    </div>`;
+  }
+
+  return `<div class="p-label">2개 이상 기관에서 공통으로 언급된 키워드 — 핵심 의제를 나타냅니다</div>
+    ${renderCommonWords(allCommon, '🔴 모든 기관 공통', '#C9A84C')}
+    ${renderCommonWords(halfCommon, '🟡 과반 기관 공통', '#4A8C5C')}
+    ${renderCommonWords(partCommon, '🟢 일부 기관 공통', '#8FBF9A')}`;
+}
+
+// ── 레이더 차트 ──
+function buildRadar(groupMap, groups){
+  const themes = Object.keys(THEMES).filter(t=>t!=='기타');
+  const themeColors = Object.values(THEMES).filter((_,i)=>i<themes.length);
+
+  // 각 기관별 주제 점수
+  const groupScores = groups.map(g=>{
+    const counts = countWords(groupMap[g]);
+    const total = counts.reduce((s,w)=>s+w[1],0)||1;
+    const scores = themes.map(theme=>{
+      const keywords = THEME_MAP[theme]||[];
+      const score = counts.filter(w=>keywords.some(k=>w[0].includes(k))).reduce((s,w)=>s+w[1],0);
+      return Math.round(score/total*100);
+    });
+    return { name: g, scores };
+  });
+
+  const maxScore = Math.max(...groupScores.flatMap(g=>g.scores), 1);
+
+  // SVG 레이더
+  const W=340, H=320, cx=W/2, cy=H/2, r=120;
+  const N=themes.length;
+  const angleStep=Math.PI*2/N;
+
+  function getPoint(i, val, maxV){
+    const angle=i*angleStep - Math.PI/2;
+    const dist=(val/maxV)*r;
+    return [cx+dist*Math.cos(angle), cy+dist*Math.sin(angle)];
+  }
+
+  // 배경 그리드
+  let svg=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-height:320px">`;
+
+  // 동심원
+  [0.25,0.5,0.75,1].forEach(ratio=>{
+    const pts=themes.map((_,i)=>getPoint(i,maxScore*ratio,maxScore));
+    svg+=`<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#D8E8DC" stroke-width="1"/>`;
+  });
+
+  // 축
+  themes.forEach((_,i)=>{
+    const [x,y]=getPoint(i,maxScore,maxScore);
+    svg+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#D8E8DC" stroke-width="1"/>`;
+  });
+
+  // 기관별 폴리곤
+  const polyColors=['#1A3328','#C9A84C','#4A8C5C','#8FBF9A','#2D5A3D','#E8C96A'];
+  groupScores.forEach((g,gi)=>{
+    const pts=g.scores.map((s,i)=>getPoint(i,s,maxScore));
+    const col=polyColors[gi%polyColors.length];
+    svg+=`<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="${col}22" stroke="${col}" stroke-width="2" opacity="0.85"/>`;
+    pts.forEach(([x,y])=>`<circle cx="${x}" cy="${y}" r="3" fill="${col}"/>`);
+  });
+
+  // 레이블
+  themes.forEach((t,i)=>{
+    const [x,y]=getPoint(i,maxScore*1.18,maxScore);
+    const anchor=x<cx-5?'end':x>cx+5?'start':'middle';
+    svg+=`<text x="${x}" y="${y}" text-anchor="${anchor}" font-size="10" fill="#2D5A3D" font-family="Noto Sans KR,sans-serif" font-weight="700">${t}</text>`;
+  });
+
+  svg+=`</svg>`;
+
+  // 범례
+  const legend=groupScores.map((g,i)=>{
+    const col=polyColors[i%polyColors.length];
+    return `<div style="display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--muted)">
+      <div style="width:12px;height:3px;background:${col};border-radius:2px"></div>${g.name}
+    </div>`;
+  }).join('');
+
+  // 점수 테이블
+  const tableRows=themes.map((t,i)=>{
+    const cells=groupScores.map(g=>`<td style="text-align:center;padding:5px 8px;font-size:.75rem;font-weight:700;color:var(--ink)">${g.scores[i]}</td>`).join('');
+    const col=themeColors[i]||THEMES['기타'];
+    return `<tr>
+      <td style="padding:5px 10px;font-size:.72rem;font-weight:700">
+        <span style="background:${col.bg};color:${col.fg};padding:1px 7px;border-radius:10px">${t}</span>
+      </td>${cells}
+    </tr>`;
+  }).join('');
+
+  const headerCells=groupScores.map(g=>`<th style="text-align:center;padding:5px 8px;font-size:.7rem;color:var(--muted);font-weight:700">${g.name}</th>`).join('');
+
+  const result=`<div class="p-label">기관별 주제 분포 비교 · 숫자 = 전체 의견 중 해당 주제 비율(%)</div><div class="radar-inner">
+    <div style="background:#fff;border-radius:14px;border:1px solid var(--border);padding:16px;margin-bottom:12px">
+      ${svg}
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px">${legend}</div>
+    </div>
+    <div style="background:#fff;border-radius:14px;border:1px solid var(--border);padding:14px;overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse">
+        <thead><tr><th style="text-align:left;padding:5px 10px;font-size:.7rem;color:var(--muted)">주제</th>${headerCells}</tr></thead>
+        <tbody>${tableRows}</tbody>
+      </table>
+    </div></div>`;
+  return result+`<div class="click-hint" onclick="openModal('기관별 비교 레이더 차트', document.querySelector('.radar-inner').innerHTML)">🔍 클릭해서 크게 보기</div>`;
+}
+
+
+function openModal(title, contentHtml){
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalContent').innerHTML = contentHtml;
+  document.getElementById('modalOverlay').classList.add('on');
+  document.body.style.overflow='hidden';
+  // WC 재배치
+  const canvas = document.getElementById('modalContent').querySelector('.wc-canvas');
+  if(canvas){
+    canvas.style.height='460px';
+    setTimeout(()=>layoutWC(canvas),50);
+  }
+}
+function closeModal(e){
+  if(e.target===document.getElementById('modalOverlay')) closeModalDirect();
+}
+function closeModalDirect(){
+  document.getElementById('modalOverlay').classList.remove('on');
+  document.body.style.overflow='';
+}
+// ESC 키로 닫기
+document.addEventListener('keydown',e=>{if(e.key==='Escape') closeModalDirect()});
 
 function goBack(){
   document.getElementById('resultScreen').style.display='none';
