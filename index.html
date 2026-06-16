@@ -201,6 +201,22 @@ function parseRows(text){
   }
   return rows;
 }
+
+// 키워드 → 원문 문장 맵
+let _kwCtx={};
+function buildKwCtx(rows){
+  _kwCtx={};
+  rows.forEach(r=>{
+    const sentences=r.o.split(/[,，]+/).map(s=>s.trim()).filter(s=>s.length>1);
+    sentences.forEach(sent=>{
+      const words=tok(sent);
+      words.forEach(w=>{
+        if(!_kwCtx[w])_kwCtx[w]=[];
+        if(_kwCtx[w].length<8) _kwCtx[w].push({table:r.t, sent});
+      });
+    });
+  });
+}
 function grp(t){return t.replace(/\s*\d+$/,'').trim();}
 
 let _tm={},_gm={},_all=[],_tbs=[],_gps=[];
@@ -222,6 +238,7 @@ function analyze(){
     _all.push(...tk);
   });
   _tbs=Object.keys(_tm);_gps=Object.keys(_gm);
+  buildKwCtx(rows);
 
   document.getElementById('rhTitle').textContent=document.getElementById('evTitle').value.trim()||'통합돌봄 민관협력 워크숍';
   document.getElementById('rhMeta').textContent=[document.getElementById('evDate').value.trim(),_tbs.length+'개 테이블',_gps.length+'개 기관'].filter(Boolean).join('  ·  ');
@@ -285,7 +302,7 @@ function activatePanel(idx){
 function drawCanvas(cv){
   document.fonts.ready.then(()=>{
     const W=cv.parentElement.clientWidth-32;
-    const H=Math.round(W*0.55);
+    const H=Math.round(W*0.65);
     cv.width=W; cv.height=H;
     cv.style.width=W+'px'; cv.style.height=H+'px';
     if(cv.dataset.type==='wc'){
@@ -373,9 +390,9 @@ function drawMM(cv,W,H){
   });
   const keys=Object.keys(groups);
   const cx=W/2,cy=H/2;
-  const CR=Math.min(W,H)*0.1;
-  const R1=Math.min(W,H)*0.19;
-  const R2=Math.min(W,H)*0.4;
+  const CR=Math.min(W,H)*0.09;
+  const R1=Math.min(W,H)*0.17;
+  const R2=Math.min(W,H)*0.32;
 
   // 중심원
   const g=ctx.createRadialGradient(cx,cy,0,cx,cy,CR);
@@ -411,9 +428,9 @@ function drawMM(cv,W,H){
     // 키워드
     const kws=groups[theme]||[];
     kws.forEach((kw,ki)=>{
-      const spread=(ki-(kws.length-1)/2)*(Math.min(W,H)*0.08);
+      const spread=(ki-(kws.length-1)/2)*(Math.min(W,H)*0.065);
       const px=Math.cos(a+Math.PI/2)*spread,py=Math.sin(a+Math.PI/2)*spread;
-      const push=R2+(kw.c/max)*Math.min(W,H)*0.06;
+      const push=R2+(kw.c/max)*Math.min(W,H)*0.03;
       const kx=tx+Math.cos(a)*push+px,ky=ty+Math.sin(a)*push+py;
       const kr=Math.min(W,H)*0.03+(kw.c/max)*Math.min(W,H)*0.012;
 
@@ -435,13 +452,14 @@ function drawMM(cv,W,H){
 function rankPanel(tokens){
   const words=cntW(tokens).slice(0,20);
   const max=words[0]?.[1]||1;
-  return `<div class="plabel">언급 빈도 순위</div>
+  return `<div class="plabel">언급 빈도 순위 · 키워드 클릭하면 원문 보기</div>
 <div class="rank-box">${words.map(([w,c],i)=>{
   const col=TH[cls(w)]||TH['기타'];
-  return `<div class="ri"><span class="rn">${i+1}</span>
+  return `<div class="ri" onclick="showKwCtx('${w}')" style="cursor:pointer" onmouseover="this.style.background='#f5fbf7'" onmouseout="this.style.background=''">
+<span class="rn">${i+1}</span>
 <div><div class="rw">${w}<span class="rc" style="background:${col.bg};color:${col.fg}">${cls(w)}</span></div>
 <div class="bar-bg"><div class="bar-f" style="width:${Math.round(c/max*100)}%;background:${col.bg}"></div></div></div>
-<span class="rs">${c}</span></div>`;
+<span class="rs">${c} 🔍</span></div>`;
 }).join('')}</div>`;
 }
 
@@ -464,8 +482,8 @@ function commonPanel(){
 <div class="ctags">${words.slice(0,18).map(w=>{
   const col=TH[cls(w.word)]||TH['기타'];
   const sz=0.75+(w.cnt/_gps.length)*0.4;
-  return `<div class="ctag"><span class="ctag-w" style="font-size:${sz}rem;background:${col.lt};color:${col.bg};border-color:${col.bg}40">${w.word}</span>
-<span class="ctag-s">${w.inG.join('·')}</span></div>`;
+  return `<div class="ctag" onclick="showKwCtx('${w.word}')" style="cursor:pointer"><span class="ctag-w" style="font-size:${sz}rem;background:${col.lt};color:${col.bg};border-color:${col.bg}40">${w.word}</span>
+<span class="ctag-s">${w.inG.join('·')} 🔍</span></div>`;
 }).join('')}</div></div>`;
   }
   return `<div class="plabel">여러 기관에서 공통 언급 키워드</div>
@@ -530,6 +548,32 @@ function groupPanel(tokens,groupName,sub){
   return wc+`<div class="sub-grid">${cards}</div>`;
 }
 
+
+// ── 키워드 맥락 보기 ──
+function showKwCtx(word){
+  const ctxList=_kwCtx[word]||[];
+  document.getElementById('mTitle').textContent='"'+word+'" 관련 원문';
+  _mtype='ctx';
+  const mb=document.getElementById('mbody');
+  const col=TH[cls(word)]||TH['기타'];
+  if(!ctxList.length){
+    mb.innerHTML=`<div style="padding:20px;color:var(--muted);font-size:.85rem">관련 원문을 찾을 수 없습니다.</div>`;
+  } else {
+    const items=ctxList.map(c=>{
+      const hi=c.sent.replace(new RegExp(word,'g'),`<mark style="background:${col.lt};color:${col.bg};font-weight:700;padding:1px 3px;border-radius:3px">${word}</mark>`);
+      return `<div style="padding:12px 14px;border-radius:10px;background:#f8faf9;border-left:3px solid ${col.bg};margin-bottom:8px">
+        <div style="font-size:.68rem;font-weight:700;color:${col.bg};margin-bottom:5px">📋 ${c.table}</div>
+        <div style="font-size:.85rem;color:var(--ink);line-height:1.7">${hi}</div>
+      </div>`;
+    }).join('');
+    mb.innerHTML=`<div style="padding:4px;overflow-y:auto;max-height:100%">
+      <div style="font-size:.72rem;color:var(--muted);margin-bottom:12px">${ctxList.length}개 테이블에서 언급됨</div>
+      ${items}
+    </div>`;
+  }
+  document.getElementById('mov').classList.add('on');
+  document.body.style.overflow='hidden';
+}
 // ── 모달 ──
 let _mtype='',_mwords=null;
 function openModal(cv,title,type){
