@@ -4,17 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>통합돌봄 민관협력 워크숍</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --forest:#1A3328;--moss:#2D5A3D;--gold:#C9A84C;--gold2:#E8C96A;
   --mist:#8FBF9A;--dew:#C8E6CD;--paper:#F2F7F3;
   --muted:#6B8C74;--ink:#0C1A14;--border:#D8E8DC;
 }
-body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);color:var(--ink)}
 
-/* 입력 화면 */
+/* 입력 */
 #inputScreen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;background:var(--forest)}
 .logo{font-size:.7rem;font-weight:700;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
 .main-title{font-family:'Noto Serif KR',serif;font-size:1.7rem;font-weight:700;color:#fff;text-align:center;line-height:1.4;margin-bottom:6px}
@@ -22,47 +23,40 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);color:var(--i
 .card{background:rgba(255,255,255,.06);border:1px solid rgba(201,168,76,.25);border-radius:20px;padding:24px;width:100%;max-width:540px}
 .card label{font-size:.7rem;font-weight:700;letter-spacing:2px;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:7px}
 .ev-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.card input{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(143,191,154,.2);border-radius:10px;padding:10px 14px;font-family:'Noto Sans KR',sans-serif;font-size:.83rem;color:#fff;outline:none}
-.card input::placeholder{color:rgba(143,191,154,.4)}
+.fi{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(143,191,154,.2);border-radius:10px;padding:10px 14px;font-family:'Noto Sans KR',sans-serif;font-size:.83rem;color:#fff;outline:none}
+.fi::placeholder{color:rgba(143,191,154,.4)}
 .divider{height:1px;background:rgba(143,191,154,.15);margin:14px 0}
-.card textarea{width:100%;min-height:160px;background:rgba(255,255,255,.08);border:1px solid rgba(143,191,154,.2);border-radius:10px;padding:12px 14px;font-family:'Noto Sans KR',sans-serif;font-size:.83rem;color:#fff;outline:none;resize:vertical;line-height:1.7}
-.card textarea::placeholder{color:rgba(143,191,154,.4)}
-.hint{font-size:.72rem;color:var(--mist);margin-top:7px;line-height:1.8;opacity:.85}
+textarea.fi{min-height:160px;resize:vertical;line-height:1.7}
+.hint{font-size:.72rem;color:var(--mist);margin-top:7px;line-height:1.8}
 .hint strong{color:var(--gold2)}
 .btn-go{width:100%;margin-top:14px;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--forest);border:none;border-radius:12px;font-family:'Noto Sans KR',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer}
 .err{background:rgba(231,111,81,.15);border:1px solid rgba(231,111,81,.4);border-radius:8px;padding:10px 14px;color:#f4a48a;font-size:.78rem;display:none;margin-top:8px}
 
-/* 결과 화면 */
-#resultScreen{display:none;height:100vh;display:none;flex-direction:column}
-.rh{background:var(--forest);padding:14px 20px;position:relative;flex-shrink:0}
+/* 결과 */
+#resultScreen{display:none}
+.rh{background:var(--forest);padding:14px 20px;position:relative}
 .rh::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 .rh-eye{font-size:.6rem;letter-spacing:2px;color:var(--gold);font-weight:700;text-transform:uppercase;margin-bottom:2px}
 .rh-title{font-family:'Noto Serif KR',serif;font-size:1rem;color:#fff;font-weight:700}
 .rh-meta{font-size:.68rem;color:var(--mist);margin-top:2px}
 .rh-btns{position:absolute;right:16px;top:50%;transform:translateY(-50%);display:flex;gap:6px}
 .btn-sm{background:rgba(255,255,255,.08);border:1px solid rgba(201,168,76,.25);border-radius:8px;padding:5px 10px;color:var(--gold2);font-size:.7rem;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
-
-/* 탭바 */
-.level-bar{background:var(--ink);border-bottom:1px solid rgba(201,168,76,.1);padding:0 12px;overflow-x:auto;display:flex;flex-shrink:0;white-space:nowrap}
-.level-btn{display:inline-block;padding:10px 12px;font-size:.7rem;font-weight:700;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;font-family:'Noto Sans KR',sans-serif;flex-shrink:0}
+.level-bar{background:var(--ink);border-bottom:1px solid rgba(201,168,76,.1);padding:0 12px;display:flex;overflow-x:auto}
+.level-btn{padding:10px 12px;font-size:.7rem;font-weight:700;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;flex-shrink:0}
 .level-btn.on{color:var(--gold);border-bottom-color:var(--gold)}
-.level-sep{display:inline-block;width:1px;background:rgba(255,255,255,.08);margin:8px 4px;vertical-align:middle;height:20px}
-
-/* 패널 영역 */
-#panelWrap{flex:1;overflow:hidden;position:relative}
-.panel{display:none;width:100%;height:100%;overflow-y:auto;padding:12px 16px}
+.lsep{width:1px;background:rgba(255,255,255,.1);margin:8px 4px;flex-shrink:0}
+.panel{display:none;padding:16px}
 .panel.on{display:block}
-.p-label{font-size:.7rem;color:var(--muted);margin-bottom:8px}
+.plabel{font-size:.7rem;color:var(--muted);margin-bottom:10px}
+.zoom-hint{font-size:.65rem;color:var(--muted);text-align:right;margin-top:5px;cursor:pointer}
 
-/* Canvas 시각화 */
-.viz-canvas{display:block;width:100%;border-radius:12px;background:#fff;border:1px solid var(--border);cursor:zoom-in}
-.zoom-hint{font-size:.65rem;color:var(--muted);text-align:right;margin-top:4px;cursor:pointer}
-.zoom-hint:hover{color:var(--moss)}
+/* 캔버스 */
+canvas.viz{display:block;border-radius:12px;background:#fff;border:1px solid var(--border);cursor:zoom-in;max-width:100%}
 
 /* 범례 */
-.legend{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
-.leg-item{display:flex;align-items:center;gap:3px;font-size:.65rem;color:var(--muted)}
-.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.leg{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.leg-i{display:flex;align-items:center;gap:3px;font-size:.65rem;color:var(--muted)}
+.leg-d{width:8px;height:8px;border-radius:50%}
 
 /* 순위 */
 .rank-box{background:#fff;border-radius:14px;padding:12px 16px;border:1px solid var(--border)}
@@ -76,23 +70,23 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);color:var(--i
 .rs{font-size:.72rem;font-weight:700;color:var(--muted);text-align:right}
 
 /* 공통키워드 */
-.common-sec{background:#fff;border-radius:14px;border:1px solid var(--border);padding:14px 16px;margin-bottom:10px}
-.common-label{font-size:.72rem;font-weight:700;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid}
-.common-tags{display:flex;flex-wrap:wrap;align-items:flex-end;gap:4px}
+.csec{background:#fff;border-radius:14px;border:1px solid var(--border);padding:14px 16px;margin-bottom:10px}
+.clabel{font-size:.72rem;font-weight:700;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid}
+.ctags{display:flex;flex-wrap:wrap;gap:4px}
 .ctag{display:inline-flex;flex-direction:column;align-items:center;margin:3px 5px}
-.ctag-word{font-weight:900;padding:3px 9px;border-radius:7px;border:1.5px solid}
-.ctag-sub{font-size:.58rem;color:var(--muted);margin-top:2px}
+.ctag-w{font-weight:900;padding:3px 9px;border-radius:7px;border:1.5px solid}
+.ctag-s{font-size:.58rem;color:var(--muted);margin-top:2px}
 
-/* 기관 서브카드 */
+/* 서브카드 */
 .sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .sub-card{background:#fff;border-radius:10px;padding:10px 12px;border:1px solid var(--border)}
-.sub-title{font-size:.7rem;font-weight:700;color:var(--moss);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+.sub-t{font-size:.7rem;font-weight:700;color:var(--moss);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid var(--border)}
 .sub-tags{display:flex;flex-wrap:wrap;gap:3px}
-.sub-tag{font-size:.65rem;font-weight:700;padding:2px 6px;border-radius:10px}
+.stag{font-size:.65rem;font-weight:700;padding:2px 6px;border-radius:10px}
 
 /* 요약 */
-.sum-card{background:var(--forest);border-radius:14px;padding:16px 18px;margin-top:10px;position:relative;overflow:hidden}
-.sum-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold2),transparent)}
+.sum{background:var(--forest);border-radius:14px;padding:16px 18px;margin:0 16px 16px;position:relative;overflow:hidden}
+.sum::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold2),transparent)}
 .sum-eye{font-size:.62rem;letter-spacing:2px;color:var(--gold);font-weight:700;text-transform:uppercase;margin-bottom:6px}
 .sum-txt{font-family:'Noto Serif KR',serif;font-size:.85rem;color:rgba(255,255,255,.88);line-height:1.8}
 .stat-row{display:flex;gap:10px;margin-top:10px;padding-top:8px;border-top:1px solid rgba(201,168,76,.15)}
@@ -101,14 +95,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);color:var(--i
 .stat-l{font-size:.6rem;color:var(--mist);margin-top:1px}
 
 /* 모달 */
-.modal-ov{display:none;position:fixed;inset:0;z-index:999;background:rgba(8,16,12,.96);align-items:center;justify-content:center;padding:12px}
-.modal-ov.on{display:flex}
-.modal-box{background:#fff;border-radius:16px;width:100%;max-width:1100px;max-height:97vh;overflow:hidden;position:relative;display:flex;flex-direction:column}
-.modal-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:2px solid var(--gold);flex-shrink:0}
-.modal-ht{font-family:'Noto Serif KR',serif;font-size:1rem;font-weight:700;color:var(--forest)}
-.modal-close{background:var(--forest);color:var(--gold2);border:none;border-radius:8px;padding:6px 14px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
-.modal-body{flex:1;overflow:hidden;padding:12px}
-#modalCanvas{display:block;border-radius:8px;background:#fff}
+.mov{display:none;position:fixed;inset:0;z-index:999;background:rgba(8,16,12,.96);align-items:center;justify-content:center;padding:12px}
+.mov.on{display:flex}
+.mbox{background:#fff;border-radius:16px;width:100%;max-width:1100px;max-height:97vh;overflow:hidden;display:flex;flex-direction:column}
+.mhd{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:2px solid var(--gold);flex-shrink:0}
+.mht{font-family:'Noto Serif KR',serif;font-size:1rem;font-weight:700;color:var(--forest)}
+.mclose{background:var(--forest);color:var(--gold2);border:none;border-radius:8px;padding:6px 14px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
+.mbody{flex:1;overflow:hidden;padding:12px;display:flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
@@ -120,12 +113,15 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);color:var(--i
   <div class="card">
     <label>행사 정보</label>
     <div class="ev-row">
-      <input type="text" id="evTitle" placeholder="행사명">
-      <input type="text" id="evDate" placeholder="날짜">
+      <input class="fi" type="text" id="evTitle" placeholder="행사명">
+      <input class="fi" type="text" id="evDate" placeholder="날짜">
     </div>
     <div class="divider"></div>
     <label>구글시트 전체 붙여넣기</label>
-    <textarea id="pasteBox" placeholder="구글시트 ★통합 탭에서 Ctrl+A → Ctrl+C 후 여기에 Ctrl+V&#10;&#10;A열: 테이블명 (구청1, 구청2, 보건소1...)&#10;D열: 의견·키워드"></textarea>
+    <textarea class="fi" id="pasteBox" placeholder="구글시트 ★통합 탭에서 Ctrl+A → Ctrl+C 후 여기에 Ctrl+V
+
+A열: 테이블명 (구청1, 구청2, 보건소1...)
+D열: 의견·키워드"></textarea>
     <p class="hint">📋 <strong>★통합 탭</strong> 전체 복사 후 붙여넣기</p>
     <div class="err" id="errBox"></div>
     <button class="btn-go" onclick="analyze()">키워드 추출 + 시각화</button>
@@ -143,82 +139,72 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);color:var(--i
     </div>
   </div>
   <div class="level-bar" id="levelBar"></div>
-  <div id="panelWrap"><div id="panels"></div></div>
+  <div id="panels"></div>
+  <div class="sum" id="sumCard" style="display:none">
+    <div class="sum-eye">전체 요약</div>
+    <div class="sum-txt" id="sumTxt"></div>
+    <div class="stat-row" id="statRow"></div>
+  </div>
 </div>
 
-<!-- 모달 -->
-<div class="modal-ov" id="modalOv" onclick="closeModalBg(event)">
-  <div class="modal-box">
-    <div class="modal-hd">
-      <div class="modal-ht" id="modalTitle"></div>
-      <button class="modal-close" onclick="closeModal()">✕ 닫기</button>
+<div class="mov" id="mov" onclick="closeMov(event)">
+  <div class="mbox">
+    <div class="mhd">
+      <div class="mht" id="mTitle"></div>
+      <button class="mclose" onclick="closeModal()">✕ 닫기</button>
     </div>
-    <div class="modal-body" id="modalBody">
-      <canvas id="modalCanvas"></canvas>
-    </div>
+    <div class="mbody" id="mbody"></div>
   </div>
 </div>
 
 <script>
-// ── 색상 테마 ──
-const THEMES={
-  '인력':      {bg:'#1A3328',fg:'#C8E6CD',light:'#E1F5EE'},
-  '예산·재정': {bg:'#B8860B',fg:'#fff',   light:'#FBF3DC'},
-  '연계·협력': {bg:'#185FA5',fg:'#fff',   light:'#E6F1FB'},
-  '서비스':    {bg:'#6B3FA0',fg:'#fff',   light:'#F0E8FB'},
-  '인프라':    {bg:'#C0392B',fg:'#fff',   light:'#FAECE7'},
-  '대상자':    {bg:'#0F6E56',fg:'#fff',   light:'#E1F5EE'},
-  '정책·제도': {bg:'#8B2252',fg:'#fff',   light:'#FBEAF0'},
-  '기타':      {bg:'#555',   fg:'#fff',   light:'#F1EFE8'},
+const TH={
+  '인력':      {bg:'#1A3328',fg:'#C8E6CD',lt:'#E1F5EE'},
+  '예산·재정': {bg:'#9A6B00',fg:'#fff',   lt:'#FBF3DC'},
+  '연계·협력': {bg:'#185FA5',fg:'#fff',   lt:'#E6F1FB'},
+  '서비스':    {bg:'#6B3FA0',fg:'#fff',   lt:'#F0E8FB'},
+  '인프라':    {bg:'#C0392B',fg:'#fff',   lt:'#FAECE7'},
+  '대상자':    {bg:'#0F6E56',fg:'#fff',   lt:'#E1F5EE'},
+  '정책·제도': {bg:'#8B2252',fg:'#fff',   lt:'#FBEAF0'},
+  '기타':      {bg:'#555555',fg:'#fff',   lt:'#F1EFE8'},
 };
-const THEME_MAP={
-  '인력':      ['인력','간호사','요양보호사','종사자','담당자','사회복지사','치료사','의사','코디'],
-  '예산·재정': ['예산','재정','수가','비용','급여','부담금','지원금'],
+const TM={
+  '인력':      ['인력','간호사','요양보호사','종사자','담당자','사회복지사','치료사','의사'],
+  '예산·재정': ['예산','재정','수가','비용','급여','부담금'],
   '연계·협력': ['연계','협력','연결','창구','네트워크','회의','공유','정보','의뢰','조정'],
-  '서비스':    ['서비스','돌봄','방문','재활','간호','교육','상담','관리','지원','프로그램','말벗'],
-  '인프라':    ['시스템','DB','자원','인프라','맵','목록','체계','환경'],
+  '서비스':    ['서비스','돌봄','방문','재활','간호','교육','상담','관리','지원','프로그램'],
+  '인프라':    ['시스템','자원','맵','목록','체계','환경','DB'],
   '대상자':    ['어르신','독거','치매','장애','이주민','외국인','수급자','환자','가족','보호자'],
   '정책·제도': ['정책','제도','기준','역할','지위','공식','허브','칸막이','규정'],
 };
-function classify(w){
-  for(const[t,ks]of Object.entries(THEME_MAP)){if(ks.some(k=>w.includes(k)))return t;}
-  return '기타';
-}
+function cls(w){for(const[t,ks]of Object.entries(TM)){if(ks.some(k=>w.includes(k)))return t;}return '기타';}
 
-const STOP=new Set(['있어','없어','너무','정말','그냥','이게','이거','거기','이렇게','저렇게',
-  '합니다','있습니다','없습니다','됩니다','해야','해서','하고','하는','하면','하지','하기',
-  '그리고','그런데','그래서','하지만','때문에','위해서','위한','대한','관련','통해','따라',
-  '이런','저런','어떤','같은','다른','많은','적은','필요','현재','현장','지금','아직',
-  '안됨','안되','못함','못해','안해','있음','없음','됨','함','함께','모두','전체','각각',
-  '및','등','이','가','을','를','은','는','에','의','와','과','도','만','로','으로',
-  '에서','에게','부터','까지','대해','입니다','이다','했다','한다','된다','이름','역할',
-  '소속','선택','입력','의견','키워드','자유','통합돌봄','민관협력','워크숍','수집',
-  '재가','병원','복지관','당사자','보호자','테이블','구분','행정','보건','안내','심각','어려움','부족']);
+const STOP=new Set('있어,없어,너무,정말,그냥,이게,이거,거기,이렇게,저렇게,합니다,있습니다,없습니다,됩니다,해야,해서,하고,하는,하면,하지,하기,그리고,그런데,그래서,하지만,때문에,위해서,위한,대한,관련,통해,따라,이런,저런,어떤,같은,다른,많은,적은,필요,현재,현장,지금,아직,안됨,안되,못함,못해,안해,있음,없음,됨,함,함께,모두,전체,각각,및,등,이,가,을,를,은,는,에,의,와,과,도,만,로,으로,에서,에게,부터,까지,대해,입니다,이다,했다,한다,된다,이름,역할,소속,선택,입력,의견,키워드,자유,통합돌봄,민관협력,워크숍,수집,재가,병원,복지관,당사자,보호자,테이블,구분,행정,보건,안내,심각,어려움,부족'.split(','));
 
-function tokenize(text){
-  return text.replace(/\t/g,' ').split(/[\n,，·\.\!\?\;\:\(\)\[\]\{\}\"\'\/\\]+/)
-    .flatMap(s=>s.split(/\s+/)).map(w=>w.trim().replace(/^[·\-\*\#\d]+/,'').trim())
+function tok(text){
+  return text.replace(/\t/g,' ').split(/[\n,，·.!?;:(){}"'\/\\]+/)
+    .flatMap(s=>s.split(/\s+/)).map(w=>w.trim().replace(/^[·\-*#\d]+/,'').trim())
     .filter(w=>w.length>=2&&!STOP.has(w)&&!/^\d+$/.test(w));
 }
-function countWords(tokens){
+function cntW(tokens){
   const m={};tokens.forEach(w=>{m[w]=(m[w]||0)+1});
   return Object.entries(m).sort((a,b)=>b[1]-a[1]);
 }
 function parseRows(text){
   const rows=[];
   for(const line of text.split('\n')){
-    if(!line.trim()) continue;
-    const cells=line.split('\t');
-    const tc=cells[0]?.trim(),oc=cells[3]?.trim()||cells[2]?.trim()||cells[1]?.trim()||'';
+    if(!line.trim())continue;
+    const c=line.split('\t');
+    const tc=c[0]?.trim(),oc=c[3]?.trim()||c[2]?.trim()||c[1]?.trim()||'';
     if(tc&&oc&&tc.length<=15&&!/^이름|^역할|^소속|^의견|^키워드|^테이블/.test(tc)&&!/^[A-Z]/.test(tc))
-      rows.push({table:tc,opinion:oc});
+      rows.push({t:tc,o:oc});
   }
   return rows;
 }
-function getGroup(t){return t.replace(/\s*\d+$/,'').trim();}
+function grp(t){return t.replace(/\s*\d+$/,'').trim();}
 
-let _tmap={},_gmap={},_all=[],_tables=[],_groups=[];
-let _panelCount=0;
+let _tm={},_gm={},_all=[],_tbs=[],_gps=[];
+let _pc=0;
 
 function analyze(){
   const text=document.getElementById('pasteBox').value.trim();
@@ -226,325 +212,351 @@ function analyze(){
   hideErr();
   const rows=parseRows(text);
   if(!rows.length){showErr('A열에 테이블명(구청1, 보건소1...)이 있는지 확인해주세요.');return;}
-  _tmap={};_gmap={};_all=[];
+  _tm={};_gm={};_all=[];
   rows.forEach(r=>{
-    const t=r.table,g=getGroup(t),tok=tokenize(r.opinion);
-    if(!_tmap[t])_tmap[t]={group:g,tokens:[]};
-    _tmap[t].tokens.push(...tok);
-    if(!_gmap[g])_gmap[g]=[];
-    _gmap[g].push(...tok);
-    _all.push(...tok);
+    const t=r.t,g=grp(t),tk=tok(r.o);
+    if(!_tm[t])_tm[t]={g,tk:[]};
+    _tm[t].tk.push(...tk);
+    if(!_gm[g])_gm[g]=[];
+    _gm[g].push(...tk);
+    _all.push(...tk);
   });
-  _tables=Object.keys(_tmap);_groups=Object.keys(_gmap);
+  _tbs=Object.keys(_tm);_gps=Object.keys(_gm);
 
-  const title=document.getElementById('evTitle').value.trim()||'통합돌봄 민관협력 워크숍';
-  const date=document.getElementById('evDate').value.trim();
-  document.getElementById('rhTitle').textContent=title;
-  document.getElementById('rhMeta').textContent=[date,_tables.length+'개 테이블',_groups.length+'개 기관'].filter(Boolean).join('  ·  ');
+  document.getElementById('rhTitle').textContent=document.getElementById('evTitle').value.trim()||'통합돌봄 민관협력 워크숍';
+  document.getElementById('rhMeta').textContent=[document.getElementById('evDate').value.trim(),_tbs.length+'개 테이블',_gps.length+'개 기관'].filter(Boolean).join('  ·  ');
 
   const bar=document.getElementById('levelBar'),pnls=document.getElementById('panels');
-  bar.innerHTML='';pnls.innerHTML='';_panelCount=0;
+  bar.innerHTML='';pnls.innerHTML='';_pc=0;
 
-  addTab(bar,pnls,'🌐 전체 워드클라우드',()=>buildWC(_all,'전체 통합'));
-  addTab(bar,pnls,'🌿 마인드맵',()=>buildMM(_all,'통합돌봄'));
-  addTab(bar,pnls,'≡ 순위',()=>buildRank(_all));
-  addTab(bar,pnls,'🎯 공통 키워드',()=>buildCommon());
-  addTab(bar,pnls,'📡 기관별 비교',()=>buildRadar());
-  bar.appendChild(Object.assign(document.createElement('span'),{className:'level-sep'}));
-  _groups.forEach(g=>{
-    const sub=_tables.filter(t=>getGroup(t)===g).map(t=>({name:t,tokens:_tmap[t].tokens}));
-    addTab(bar,pnls,'📂 '+g,()=>buildGroup(_gmap[g],g,sub));
+  addTab(bar,pnls,'🌐 전체 워드클라우드',()=>wcPanel(_all,'전체 통합'));
+  addTab(bar,pnls,'🌿 마인드맵',()=>mmPanel());
+  addTab(bar,pnls,'≡ 순위',()=>rankPanel(_all));
+  addTab(bar,pnls,'🎯 공통 키워드',()=>commonPanel());
+  addTab(bar,pnls,'📡 기관별 비교',()=>radarPanel());
+  addSep(bar);
+  _gps.forEach(g=>{
+    const sub=_tbs.filter(t=>grp(t)===g).map(t=>({n:t,tk:_tm[t].tk}));
+    addTab(bar,pnls,'📂 '+g,()=>groupPanel(_gm[g],g,sub));
   });
-  bar.appendChild(Object.assign(document.createElement('span'),{className:'level-sep'}));
-  _tables.forEach(t=>addTab(bar,pnls,'📋 '+t,()=>buildWC(_tmap[t].tokens,t)));
+  addSep(bar);
+  _tbs.forEach(t=>addTab(bar,pnls,'📋 '+t,()=>wcPanel(_tm[t].tk,t)));
 
-  const top5=countWords(_all).slice(0,5).map(w=>w[0]).join(', ');
+  const top5=cntW(_all).slice(0,5).map(w=>w[0]).join(', ');
+  const sc=document.getElementById('sumCard');
+  sc.style.display='block';
+  document.getElementById('sumTxt').textContent=`가장 많이 언급된 키워드는 ${top5} 등입니다. ${_gps.length}개 기관 ${_tbs.length}개 테이블에서 의견이 수집되었습니다.`;
+  document.getElementById('statRow').innerHTML=`<div class="stat"><div class="stat-n">${_tbs.length}</div><div class="stat-l">참여 테이블</div></div><div class="stat"><div class="stat-n">${_gps.length}</div><div class="stat-l">기관 유형</div></div><div class="stat"><div class="stat-n">${cntW(_all).length}</div><div class="stat-l">핵심 키워드</div></div>`;
+
   document.getElementById('inputScreen').style.display='none';
-  const rs=document.getElementById('resultScreen');
-  rs.style.display='flex';
-  renderPanel(0);
+  document.getElementById('resultScreen').style.display='block';
+  setTimeout(()=>activatePanel(0),100);
 }
 
 function addTab(bar,pnls,label,fn){
-  const idx=_panelCount++;
+  const idx=_pc++;
   const btn=document.createElement('button');
   btn.className='level-btn'+(idx===0?' on':'');
   btn.textContent=label;btn.onclick=()=>switchTab(idx);
   bar.appendChild(btn);
   const p=document.createElement('div');
   p.className='panel'+(idx===0?' on':'');
-  p.id='panel'+idx;p._fn=fn;
+  p.id='p'+idx;p._fn=fn;
   pnls.appendChild(p);
 }
-
-function renderPanel(idx){
-  const p=document.getElementById('panel'+idx);
-  if(!p||!p._fn||p._done)return;
-  p.innerHTML=p._fn();p._done=true;
-  const canvas=p.querySelector('.viz-canvas');
-  if(canvas) setTimeout(()=>drawOnCanvas(canvas),50);
-}
+function addSep(bar){const s=document.createElement('div');s.className='lsep';bar.appendChild(s);}
 
 function switchTab(idx){
   document.querySelectorAll('.level-btn').forEach((b,i)=>b.classList.toggle('on',i===idx));
   document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('on',i===idx));
-  renderPanel(idx);
-  // 이미 렌더됐으면 캔버스 재그리기
-  const p=document.getElementById('panel'+idx);
-  if(p&&p._done){
-    const canvas=p.querySelector('.viz-canvas');
-    if(canvas) setTimeout(()=>drawOnCanvas(canvas),50);
-  }
+  activatePanel(idx);
 }
 
-// ── Canvas에 그리기 (WC or MM 공통) ──
-function drawOnCanvas(canvas){
-  const type=canvas.dataset.type;
-  const W=canvas.parentElement.offsetWidth-32||600;
-  const H=Math.max(window.innerHeight-220,320);
-  canvas.width=W; canvas.height=H;
-  canvas.style.width=W+'px'; canvas.style.height=H+'px';
-  if(type==='wc') drawWC(canvas,JSON.parse(canvas.dataset.words),W,H);
-  if(type==='mm') drawMindmapCanvas(canvas,canvas.dataset.title,W,H);
+function activatePanel(idx){
+  const p=document.getElementById('p'+idx);
+  if(!p||!p._fn)return;
+  if(!p._done){p.innerHTML=p._fn();p._done=true;}
+  // 캔버스가 있으면 그리기
+  const cv=p.querySelector('canvas.viz');
+  if(cv) drawCanvas(cv);
 }
 
-// ── 워드클라우드 빌더 ──
-function buildWC(tokens,title){
-  const counts=countWords(tokens).slice(0,45);
-  return `<div class="p-label">${title} · 크기=언급빈도 · 색=주제</div>
-    <canvas class="viz-canvas" data-type="wc" data-words='${JSON.stringify(counts)}' onclick="openModal(this,'${title} 워드클라우드','wc')"></canvas>
-    <div class="legend">${Object.entries(THEMES).map(([n,c])=>`<div class="leg-item"><div class="leg-dot" style="background:${c.bg}"></div>${n}</div>`).join('')}</div>
-    <div class="zoom-hint" onclick="openModal(this.previousElementSibling.previousElementSibling,'${title} 워드클라우드','wc')">🔍 클릭해서 크게 보기</div>`;
+// ── 캔버스 그리기 ──
+function drawCanvas(cv){
+  document.fonts.ready.then(()=>{
+    const W=cv.parentElement.clientWidth-32;
+    const H=Math.round(W*0.55);
+    cv.width=W; cv.height=H;
+    cv.style.width=W+'px'; cv.style.height=H+'px';
+    if(cv.dataset.type==='wc'){
+      const words=JSON.parse(cv.dataset.words||'[]');
+      drawWC(cv,words,W,H);
+    }
+    if(cv.dataset.type==='mm') drawMM(cv,W,H);
+  });
 }
 
-function drawWC(canvas,counts,W,H){
-  const ctx=canvas.getContext('2d');
+// ── 워드클라우드 패널 ──
+function wcPanel(tokens,title){
+  const words=cntW(tokens).slice(0,45);
+  const wordsJson=JSON.stringify(words).replace(/'/g,'&#39;');
+  const legHTML=Object.entries(TH).map(([n,c])=>`<div class="leg-i"><div class="leg-d" style="background:${c.bg}"></div>${n}</div>`).join('');
+  return `<div class="plabel">${title} · 크기=언급빈도 · 색=주제</div>
+<canvas class="viz" data-type="wc" data-words='${wordsJson}' onclick="openModal(this,'${title} 워드클라우드','wc')"></canvas>
+<div class="leg">${legHTML}</div>
+<div class="zoom-hint" onclick="openModal(this.previousElementSibling.previousElementSibling,'${title} 워드클라우드','wc')">🔍 크게 보기</div>`;
+}
+
+function drawWC(cv,words,W,H){
+  const ctx=cv.getContext('2d');
   ctx.clearRect(0,0,W,H);
-  const max=counts[0]?.[1]||1;
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  const max=words[0]?.[1]||1;
   const placed=[];
   const cx=W/2,cy=H/2;
-  counts.forEach(([word,cnt])=>{
-    const col=THEMES[classify(word)]||THEMES['기타'];
+  const rots=[-15,-8,-4,0,0,0,4,8,15];
+
+  words.forEach(([word,cnt])=>{
+    const col=TH[cls(word)]||TH['기타'];
     const ratio=cnt/max;
-    const size=Math.round(12+ratio*Math.min(W,H)*0.08);
-    const rot=[-18,-10,-5,0,0,0,5,10,18][Math.floor(Math.random()*9)]*Math.PI/180;
+    const size=Math.round(10+ratio*H*0.18);
+    const rot=rots[Math.floor(Math.random()*rots.length)]*Math.PI/180;
     ctx.save();
     ctx.font=`900 ${size}px "Noto Sans KR",sans-serif`;
-    const tw=ctx.measureText(word).width;
-    const th=size*1.2;
-    let x,y,tries=0,angle=Math.random()*Math.PI*2,r=0;
-    do{angle+=0.4;r+=1.5;x=cx+r*Math.cos(angle);y=cy+r*Math.sin(angle)*0.7;tries++;}
-    while(tries<400&&!fits(x,y,tw,th,rot,placed,W,H));
-    placed.push({x,y,w:tw,h:th,rot});
-    ctx.translate(x,y);ctx.rotate(rot);
-    ctx.globalAlpha=0.55+ratio*0.45;
-    ctx.fillStyle=col.bg;
-    ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(word,0,0);
+    const tw=ctx.measureText(word).width+4;
+    const th=size*1.3;
+    let x=cx,y=cy,ok=false;
+    let angle=Math.random()*Math.PI*2,r=0,tries=0;
+    while(tries<500){
+      angle+=0.38;r+=1.2;
+      x=cx+r*Math.cos(angle);
+      y=cy+r*Math.sin(angle)*0.65;
+      tries++;
+      if(x-tw/2>2&&x+tw/2<W-2&&y-th/2>2&&y+th/2<H-2){
+        let hit=false;
+        for(const p of placed){
+          if(Math.abs(x-p.x)<(tw+p.w)/2+6&&Math.abs(y-p.y)<(th+p.h)/2+4){hit=true;break;}
+        }
+        if(!hit){ok=true;break;}
+      }
+    }
+    if(ok){
+      placed.push({x,y,w:tw,h:th});
+      ctx.translate(x,y);ctx.rotate(rot);
+      ctx.globalAlpha=0.5+ratio*0.5;
+      ctx.fillStyle=col.bg;
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(word,0,0);
+    }
     ctx.restore();
   });
 }
 
-function fits(x,y,w,h,rot,placed,W,H){
-  if(x-w/2<4||x+w/2>W-4||y-h/2<4||y+h/2>H-4)return false;
-  for(const p of placed){if(Math.abs(x-p.x)<(w+p.w)/2+8&&Math.abs(y-p.y)<(h+p.h)/2+5)return false;}
-  return true;
+// ── 마인드맵 패널 ──
+function mmPanel(){
+  return `<div class="plabel">통합돌봄 마인드맵 · 주제별 키워드</div>
+<canvas class="viz" data-type="mm" onclick="openModal(this,'통합돌봄 마인드맵','mm')"></canvas>
+<div class="zoom-hint" onclick="openModal(this.previousElementSibling,'통합돌봄 마인드맵','mm')">🔍 크게 보기</div>`;
 }
 
-// ── 마인드맵 빌더 ──
-function buildMM(tokens,title){
-  return `<div class="p-label">${title} 마인드맵 · 주제별 키워드</div>
-    <canvas class="viz-canvas" data-type="mm" data-title="${title}" onclick="openModal(this,'${title} 마인드맵','mm')"></canvas>
-    <div class="zoom-hint" onclick="openModal(this.previousElementSibling,'${title} 마인드맵','mm')">🔍 클릭해서 크게 보기</div>`;
-}
-
-function drawMindmapCanvas(canvas, mmTitle, W, H){
-  const ctx=canvas.getContext('2d');
+function drawMM(cv,W,H){
+  const ctx=cv.getContext('2d');
   ctx.clearRect(0,0,W,H);
-  const counts=countWords(_all);
-  const max=counts[0]?.[1]||1;
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  const words=cntW(_all);
+  const max=words[0]?.[1]||1;
   const groups={};
-  counts.slice(0,48).forEach(([w,c])=>{
-    const t=classify(w);
+  words.slice(0,48).forEach(([w,c])=>{
+    const t=cls(w);
     if(!groups[t])groups[t]=[];
-    groups[t].push({word:w,count:c});
+    if(groups[t].length<5)groups[t].push({w,c});
   });
   const keys=Object.keys(groups);
   const cx=W/2,cy=H/2;
-  const R1=Math.min(W,H)*0.17;
-  const R2=Math.min(W,H)*0.38;
-  const CR=Math.min(W,H)*0.09;
+  const CR=Math.min(W,H)*0.1;
+  const R1=Math.min(W,H)*0.19;
+  const R2=Math.min(W,H)*0.4;
 
-  // 중심
+  // 중심원
   const g=ctx.createRadialGradient(cx,cy,0,cx,cy,CR);
   g.addColorStop(0,'#2D5A3D');g.addColorStop(1,'#1A3328');
   ctx.beginPath();ctx.arc(cx,cy,CR,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
-  ctx.strokeStyle='#C9A84C';ctx.lineWidth=2;ctx.stroke();
-  ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.font=`bold ${Math.round(CR*0.32)}px "Noto Sans KR",sans-serif`;
+  ctx.strokeStyle='#C9A84C';ctx.lineWidth=2.5;ctx.stroke();
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillStyle='#fff';
+  ctx.font=`700 ${Math.round(CR*0.3)}px "Noto Sans KR",sans-serif`;
   ctx.fillText('통합돌봄',cx,cy-CR*0.15);
-  ctx.font=`${Math.round(CR*0.22)}px "Noto Sans KR",sans-serif`;
-  ctx.fillStyle='#C9A84C';ctx.fillText('민관협력',cx,cy+CR*0.28);
+  ctx.font=`400 ${Math.round(CR*0.2)}px "Noto Sans KR",sans-serif`;
+  ctx.fillStyle='#C9A84C';ctx.fillText('민관협력',cx,cy+CR*0.3);
 
   keys.forEach((theme,ti)=>{
-    const angle=(ti/keys.length)*Math.PI*2-Math.PI/2;
-    const tx=cx+R1*Math.cos(angle),ty=cy+R1*Math.sin(angle);
-    const col=THEMES[theme]||THEMES['기타'];
-    const TR=Math.min(W,H)*0.055;
+    const a=(ti/keys.length)*Math.PI*2-Math.PI/2;
+    const tx=cx+R1*Math.cos(a),ty=cy+R1*Math.sin(a);
+    const col=TH[theme]||TH['기타'];
+    const TR=Math.min(W,H)*0.058;
 
     // 중심→주제 선
-    ctx.beginPath();ctx.moveTo(cx+CR*Math.cos(angle),cy+CR*Math.sin(angle));
-    ctx.lineTo(tx,ty);ctx.strokeStyle=col.bg+'88';ctx.lineWidth=2;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx+CR*Math.cos(a),cy+CR*Math.sin(a));
+    ctx.lineTo(tx-TR*Math.cos(a),ty-TR*Math.sin(a));
+    ctx.strokeStyle=col.bg+'99';ctx.lineWidth=2;ctx.stroke();
 
-    // 주제 원
-    ctx.beginPath();ctx.arc(tx,ty,TR,0,Math.PI*2);ctx.fillStyle=col.bg;ctx.fill();
-    ctx.font=`bold ${Math.round(TR*0.36)}px "Noto Sans KR",sans-serif`;
+    // 주제원
+    ctx.beginPath();ctx.arc(tx,ty,TR,0,Math.PI*2);
+    ctx.fillStyle=col.bg;ctx.fill();
+    ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
     ctx.fillStyle=col.fg;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.font=`700 ${Math.round(TR*0.34)}px "Noto Sans KR",sans-serif`;
     ctx.fillText(theme,tx,ty);
 
-    // 키워드 노드
-    const kws=groups[theme].slice(0,5);
+    // 키워드
+    const kws=groups[theme]||[];
     kws.forEach((kw,ki)=>{
-      const spread=(ki-(kws.length-1)/2)*(Math.min(W,H)*0.075);
-      const px=Math.cos(angle+Math.PI/2)*spread,py=Math.sin(angle+Math.PI/2)*spread;
-      const push=R2+(kw.count/max)*Math.min(W,H)*0.05;
-      const kx=tx+Math.cos(angle)*push+px,ky=ty+Math.sin(angle)*push+py;
-      const kr=Math.min(W,H)*0.028+(kw.count/max)*Math.min(W,H)*0.015;
+      const spread=(ki-(kws.length-1)/2)*(Math.min(W,H)*0.08);
+      const px=Math.cos(a+Math.PI/2)*spread,py=Math.sin(a+Math.PI/2)*spread;
+      const push=R2+(kw.c/max)*Math.min(W,H)*0.06;
+      const kx=tx+Math.cos(a)*push+px,ky=ty+Math.sin(a)*push+py;
+      const kr=Math.min(W,H)*0.03+(kw.c/max)*Math.min(W,H)*0.012;
 
-      ctx.beginPath();ctx.moveTo(tx+TR*Math.cos(angle),ty+TR*Math.sin(angle));
-      ctx.lineTo(kx,ky);ctx.strokeStyle=col.bg+'44';ctx.lineWidth=1.2;ctx.stroke();
+      ctx.beginPath();ctx.moveTo(tx+TR*Math.cos(a),ty+TR*Math.sin(a));
+      ctx.lineTo(kx-kr*Math.cos(a),ky-kr*Math.sin(a));
+      ctx.strokeStyle=col.bg+'55';ctx.lineWidth=1.2;ctx.stroke();
 
       ctx.beginPath();ctx.arc(kx,ky,kr,0,Math.PI*2);
-      ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=col.bg;ctx.lineWidth=1.5;ctx.stroke();
-      ctx.font=`bold ${Math.round(kr*0.65)}px "Noto Sans KR",sans-serif`;
+      ctx.fillStyle='#fff';ctx.fill();
+      ctx.strokeStyle=col.bg;ctx.lineWidth=1.5;ctx.stroke();
       ctx.fillStyle=col.bg;ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.fillText(kw.word,kx,ky);
+      ctx.font=`700 ${Math.round(Math.max(kr*0.6,8))}px "Noto Sans KR",sans-serif`;
+      ctx.fillText(kw.w,kx,ky);
     });
   });
 }
 
-// ── 모달 ──
-let _modalType='',_modalData=null;
-function openModal(canvas,title,type){
-  document.getElementById('modalTitle').textContent=title;
-  _modalType=type;
-  if(type==='wc') _modalData=JSON.parse(canvas.dataset.words);
-  document.getElementById('modalOv').classList.add('on');
-  document.body.style.overflow='hidden';
-  setTimeout(()=>{
-    const mb=document.getElementById('modalBody');
-    const mc=document.getElementById('modalCanvas');
-    const W=mb.offsetWidth-24||900;
-    const H=mb.offsetHeight-24||window.innerHeight*0.8;
-    mc.width=W;mc.height=H;mc.style.width=W+'px';mc.style.height=H+'px';
-    if(type==='wc') drawWC(mc,_modalData,W,H);
-    if(type==='mm') drawMindmapCanvas(mc,'통합돌봄',W,H);
-  },80);
-}
-function closeModalBg(e){if(e.target===document.getElementById('modalOv'))closeModal();}
-function closeModal(){document.getElementById('modalOv').classList.remove('on');document.body.style.overflow='';}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
-
-// ── 순위 ──
-function buildRank(tokens){
-  const counts=countWords(tokens).slice(0,20);
-  const max=counts[0]?.[1]||1;
-  return `<div class="p-label">전체 통합 · 언급 빈도 순위</div>
-    <div class="rank-box">${counts.map(([w,c],i)=>{
-      const col=THEMES[classify(w)]||THEMES['기타'];
-      return `<div class="ri"><span class="rn">${i+1}</span>
-        <div><div class="rw">${w}<span class="rc" style="background:${col.bg};color:${col.fg}">${classify(w)}</span></div>
-        <div class="bar-bg"><div class="bar-f" style="width:${Math.round(c/max*100)}%;background:${col.bg}"></div></div></div>
-        <span class="rs">${c}</span></div>`;
-    }).join('')}</div>`;
+// ── 순위 패널 ──
+function rankPanel(tokens){
+  const words=cntW(tokens).slice(0,20);
+  const max=words[0]?.[1]||1;
+  return `<div class="plabel">언급 빈도 순위</div>
+<div class="rank-box">${words.map(([w,c],i)=>{
+  const col=TH[cls(w)]||TH['기타'];
+  return `<div class="ri"><span class="rn">${i+1}</span>
+<div><div class="rw">${w}<span class="rc" style="background:${col.bg};color:${col.fg}">${cls(w)}</span></div>
+<div class="bar-bg"><div class="bar-f" style="width:${Math.round(c/max*100)}%;background:${col.bg}"></div></div></div>
+<span class="rs">${c}</span></div>`;
+}).join('')}</div>`;
 }
 
-// ── 공통 키워드 ──
-function buildCommon(){
-  if(_groups.length<2) return '<div class="p-label">기관이 2개 이상 있어야 합니다</div>';
-  const gSets=_groups.map(g=>({name:g,set:new Set(countWords(_gmap[g]).slice(0,30).map(w=>w[0])),counts:countWords(_gmap[g])}));
-  const allWords=[...new Set(gSets.flatMap(g=>[...g.set]))];
-  const common=allWords.map(word=>{
-    const inG=gSets.filter(g=>g.set.has(word)).map(g=>g.name);
-    return {word,inG,count:inG.length};
-  }).filter(w=>w.count>=2).sort((a,b)=>b.count-a.count);
-  const allC=common.filter(w=>w.count===_groups.length);
-  const halfC=common.filter(w=>w.count>=Math.ceil(_groups.length/2)&&w.count<_groups.length);
-  const partC=common.filter(w=>w.count>=2&&w.count<Math.ceil(_groups.length/2));
+// ── 공통 키워드 패널 ──
+function commonPanel(){
+  if(_gps.length<2)return '<div class="plabel">기관이 2개 이상 있어야 합니다</div>';
+  const gSets=_gps.map(g=>({n:g,set:new Set(cntW(_gm[g]).slice(0,30).map(w=>w[0]))}));
+  const allW=[...new Set(gSets.flatMap(g=>[...g.set]))];
+  const common=allW.map(word=>{
+    const inG=gSets.filter(g=>g.set.has(word)).map(g=>g.n);
+    return {word,inG,cnt:inG.length};
+  }).filter(w=>w.cnt>=2).sort((a,b)=>b.cnt-a.cnt);
+  const aC=common.filter(w=>w.cnt===_gps.length);
+  const hC=common.filter(w=>w.cnt>=Math.ceil(_gps.length/2)&&w.cnt<_gps.length);
+  const pC=common.filter(w=>w.cnt>=2&&w.cnt<Math.ceil(_gps.length/2));
   function sec(words,label,accent){
     if(!words.length)return '';
-    return `<div class="common-sec">
-      <div class="common-label" style="color:${accent};border-color:${accent}40">${label} <span style="font-size:.65rem;font-weight:400;color:var(--muted)">${words.length}개</span></div>
-      <div class="common-tags">${words.slice(0,18).map(w=>{
-        const col=THEMES[classify(w.word)]||THEMES['기타'];
-        const size=0.75+(w.count/_groups.length)*0.4;
-        return `<div class="ctag"><span class="ctag-word" style="font-size:${size}rem;background:${col.light};color:${col.bg};border-color:${col.bg}40">${w.word}</span>
-          <span class="ctag-sub">${w.inG.join('·')}</span></div>`;
-      }).join('')}</div></div>`;
+    return `<div class="csec">
+<div class="clabel" style="color:${accent};border-color:${accent}40">${label} <span style="font-size:.65rem;font-weight:400;color:var(--muted)">${words.length}개</span></div>
+<div class="ctags">${words.slice(0,18).map(w=>{
+  const col=TH[cls(w.word)]||TH['기타'];
+  const sz=0.75+(w.cnt/_gps.length)*0.4;
+  return `<div class="ctag"><span class="ctag-w" style="font-size:${sz}rem;background:${col.lt};color:${col.bg};border-color:${col.bg}40">${w.word}</span>
+<span class="ctag-s">${w.inG.join('·')}</span></div>`;
+}).join('')}</div></div>`;
   }
-  return `<div class="p-label">여러 기관에서 공통 언급 키워드 — 핵심 의제</div>
-    ${sec(allC,'🔴 모든 기관 공통','#C9A84C')}
-    ${sec(halfC,'🟠 과반 기관 공통','#D85A30')}
-    ${sec(partC,'🟡 일부 기관 공통','#4A8C5C')}`;
+  return `<div class="plabel">여러 기관에서 공통 언급 키워드</div>
+${sec(aC,'🔴 모든 기관 공통','#C9A84C')}
+${sec(hC,'🟠 과반 기관 공통','#D85A30')}
+${sec(pC,'🟡 일부 기관 공통','#4A8C5C')}`;
 }
 
-// ── 레이더 ──
-function buildRadar(){
-  const themes=Object.keys(THEMES).filter(t=>t!=='기타');
-  const gS=_groups.map(g=>{
-    const counts=countWords(_gmap[g]);
-    const total=counts.reduce((s,w)=>s+w[1],0)||1;
-    return {name:g,scores:themes.map(t=>{
-      const ks=THEME_MAP[t]||[];
-      return Math.round(counts.filter(w=>ks.some(k=>w[0].includes(k))).reduce((s,w)=>s+w[1],0)/total*100);
+// ── 레이더 패널 ──
+function radarPanel(){
+  const themes=Object.keys(TH).filter(t=>t!=='기타');
+  const gS=_gps.map(g=>{
+    const words=cntW(_gm[g]);
+    const total=words.reduce((s,w)=>s+w[1],0)||1;
+    return {n:g,scores:themes.map(t=>{
+      const ks=TM[t]||[];
+      return Math.round(words.filter(w=>ks.some(k=>w[0].includes(k))).reduce((s,w)=>s+w[1],0)/total*100);
     })};
   });
   const maxS=Math.max(...gS.flatMap(g=>g.scores),1);
-  const W=300,H=260,cx=W/2,cy=H/2,r=100,N=themes.length,step=Math.PI*2/N;
-  function pt(i,v,m){const a=i*step-Math.PI/2,d=(v/m)*r;return[cx+d*Math.cos(a),cy+d*Math.sin(a)];}
-  const pCols=['#1A3328','#B8860B','#185FA5','#6B3FA0','#C0392B','#8B2252'];
-  let svg=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-height:260px">`;
-  [.25,.5,.75,1].forEach(r2=>{
-    const pts=themes.map((_,i)=>pt(i,maxS*r2,maxS));
+  const W=320,H=280,cx=W/2,cy=H/2,R=110,N=themes.length,step=Math.PI*2/N;
+  function pt(i,v,m){const a=i*step-Math.PI/2,d=(v/m)*R;return[cx+d*Math.cos(a),cy+d*Math.sin(a)];}
+  const pCols=['#1A3328','#9A6B00','#185FA5','#6B3FA0','#C0392B','#8B2252'];
+  let svg=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-height:280px">`;
+  [.25,.5,.75,1].forEach(r=>{
+    const pts=themes.map((_,i)=>pt(i,maxS*r,maxS));
     svg+=`<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#D8E8DC" stroke-width="1"/>`;
   });
   themes.forEach((_,i)=>{const[x,y]=pt(i,maxS,maxS);svg+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#D8E8DC" stroke-width="1"/>`;});
   gS.forEach((g,gi)=>{
     const pts=g.scores.map((s,i)=>pt(i,s,maxS));
-    svg+=`<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="${pCols[gi%pCols.length]}20" stroke="${pCols[gi%pCols.length]}" stroke-width="2"/>`;
+    const col=pCols[gi%pCols.length];
+    svg+=`<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="${col}22" stroke="${col}" stroke-width="2"/>`;
   });
   themes.forEach((t,i)=>{
     const[x,y]=pt(i,maxS*1.22,maxS);
-    const col=THEMES[t]||THEMES['기타'];
+    const col=TH[t]||TH['기타'];
     svg+=`<text x="${x}" y="${y}" text-anchor="${x<cx-5?'end':x>cx+5?'start':'middle'}" font-size="9" fill="${col.bg}" font-family="Noto Sans KR" font-weight="700">${t}</text>`;
   });
   svg+=`</svg>`;
-  const legend=gS.map((g,i)=>`<div style="display:flex;align-items:center;gap:4px;font-size:.68rem;color:var(--muted)"><div style="width:12px;height:3px;background:${pCols[i%pCols.length]};border-radius:2px"></div>${g.name}</div>`).join('');
-  const hcells=gS.map(g=>`<th style="text-align:center;padding:3px 5px;font-size:.65rem;color:var(--muted)">${g.name}</th>`).join('');
-  const trows=themes.map((t,i)=>{
-    const col=THEMES[t]||THEMES['기타'];
-    return `<tr><td style="padding:3px 8px"><span style="background:${col.bg};color:${col.fg};padding:1px 6px;border-radius:8px;font-size:.65rem;font-weight:700">${t}</span></td>
-      ${gS.map(g=>`<td style="text-align:center;padding:3px 5px;font-size:.72rem;font-weight:700">${g.scores[i]}</td>`).join('')}</tr>`;
+  const leg=gS.map((g,i)=>`<div style="display:flex;align-items:center;gap:4px;font-size:.68rem;color:var(--muted)"><div style="width:14px;height:3px;background:${pCols[i%pCols.length]};border-radius:2px"></div>${g.n}</div>`).join('');
+  const hc=gS.map(g=>`<th style="text-align:center;padding:3px 5px;font-size:.63rem;color:var(--muted)">${g.n}</th>`).join('');
+  const tr=themes.map((t,i)=>{
+    const col=TH[t]||TH['기타'];
+    return `<tr><td style="padding:3px 8px"><span style="background:${col.bg};color:${col.fg};padding:1px 6px;border-radius:8px;font-size:.63rem;font-weight:700">${t}</span></td>${gS.map(g=>`<td style="text-align:center;padding:3px 5px;font-size:.7rem;font-weight:700">${g.scores[i]}</td>`).join('')}</tr>`;
   }).join('');
-  return `<div class="p-label">기관별 주제 분포 비교</div>
-    <div style="background:#fff;border-radius:14px;border:1px solid var(--border);padding:14px;margin-bottom:10px">
-      ${svg}<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px">${legend}</div></div>
-    <div style="background:#fff;border-radius:14px;border:1px solid var(--border);padding:12px;overflow-x:auto">
-      <table style="width:100%;border-collapse:collapse"><thead><tr><th style="text-align:left;padding:3px 8px;font-size:.65rem;color:var(--muted)">주제</th>${hcells}</tr></thead><tbody>${trows}</tbody></table></div>`;
+  return `<div class="plabel">기관별 주제 분포 비교</div>
+<div style="background:#fff;border-radius:14px;border:1px solid var(--border);padding:14px;margin-bottom:10px">${svg}
+<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px">${leg}</div></div>
+<div style="background:#fff;border-radius:14px;border:1px solid var(--border);padding:12px;overflow-x:auto">
+<table style="width:100%;border-collapse:collapse"><thead><tr><th style="text-align:left;padding:3px 8px;font-size:.63rem;color:var(--muted)">주제</th>${hc}</tr></thead><tbody>${tr}</tbody></table></div>`;
 }
 
-// ── 기관 합본 ──
-function buildGroup(tokens,groupName,sub){
-  const wc=buildWC(tokens,groupName+' 합본');
+// ── 기관 합본 패널 ──
+function groupPanel(tokens,groupName,sub){
+  const wc=wcPanel(tokens,groupName+' 합본');
   const cards=sub.map(s=>{
-    const sc=countWords(s.tokens).slice(0,8);
-    return `<div class="sub-card"><div class="sub-title">📋 ${s.name}</div>
-      <div class="sub-tags">${sc.map(([w])=>{const col=THEMES[classify(w)]||THEMES['기타'];return `<span class="sub-tag" style="background:${col.bg};color:${col.fg}">${w}</span>`;}).join('')}</div></div>`;
+    const sc=cntW(s.tk).slice(0,8);
+    return `<div class="sub-card"><div class="sub-t">📋 ${s.n}</div>
+<div class="sub-tags">${sc.map(([w])=>{const col=TH[cls(w)]||TH['기타'];return `<span class="stag" style="background:${col.bg};color:${col.fg}">${w}</span>`;}).join('')}</div></div>`;
   }).join('');
   return wc+`<div class="sub-grid">${cards}</div>`;
 }
 
-function goBack(){document.getElementById('resultScreen').style.display='none';document.getElementById('inputScreen').style.display='flex';}
+// ── 모달 ──
+let _mtype='',_mwords=null;
+function openModal(cv,title,type){
+  document.getElementById('mTitle').textContent=title;
+  _mtype=type;
+  if(type==='wc')_mwords=JSON.parse(cv.dataset.words||'[]');
+  document.getElementById('mov').classList.add('on');
+  document.body.style.overflow='hidden';
+  document.fonts.ready.then(()=>{
+    const mb=document.getElementById('mbody');
+    mb.innerHTML='';
+    const mc=document.createElement('canvas');
+    mb.appendChild(mc);
+    const W=mb.clientWidth-24;
+    const H=mb.clientHeight-24||Math.round(W*0.55);
+    mc.width=W;mc.height=H;
+    mc.style.width=W+'px';mc.style.height=H+'px';
+    mc.style.borderRadius='8px';
+    if(type==='wc')drawWC(mc,_mwords,W,H);
+    if(type==='mm')drawMM(mc,W,H);
+  });
+}
+function closeMov(e){if(e.target===document.getElementById('mov'))closeModal();}
+function closeModal(){document.getElementById('mov').classList.remove('on');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+function goBack(){document.getElementById('resultScreen').style.display='none';document.getElementById('inputScreen').style.display='flex';document.getElementById('sumCard').style.display='none';}
 function toggleFS(){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
 function showErr(m){const b=document.getElementById('errBox');b.textContent=m;b.style.display='block';}
 function hideErr(){document.getElementById('errBox').style.display='none';}
