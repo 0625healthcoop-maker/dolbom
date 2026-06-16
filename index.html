@@ -57,8 +57,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);color:var(--i
 .zoom-hint:hover{color:var(--moss)}
 
 /* 워드클라우드 */
-.wc-wrap{background:#fff;border-radius:16px;border:1px solid var(--border);position:relative;overflow:hidden;height:calc(100vh - 200px);min-height:320px;cursor:zoom-in}
-.wc-canvas{width:100%;height:100%;min-height:320px;position:relative}
+.wc-wrap{background:#fff;border-radius:16px;border:1px solid var(--border);position:relative;overflow:hidden;cursor:zoom-in}
+.wc-canvas{width:100%;position:relative}
 .wc-word{position:absolute;transform:translate(-50%,-50%);cursor:default;font-family:'Noto Sans KR',sans-serif;font-weight:900;white-space:nowrap;transition:opacity .2s,transform .2s;line-height:1}
 .wc-word:hover{opacity:1!important;transform:translate(-50%,-50%) scale(1.15)!important;z-index:10}
 
@@ -102,7 +102,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);color:var(--i
 .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--gold)}
 .modal-htitle{font-family:'Noto Serif KR',serif;font-size:1.1rem;font-weight:700;color:var(--forest)}
 .modal-close{background:var(--forest);color:var(--gold2);border:none;border-radius:8px;padding:7px 16px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
-.modal-wc{width:100%;height:calc(90vh - 120px);position:relative;background:#fff;border-radius:12px;overflow:hidden}
+.modal-wc{width:100%;position:relative;background:#fff;border-radius:12px;overflow:hidden}
 </style>
 </head>
 <body>
@@ -370,17 +370,17 @@ let _mmTokens=[], _mmTitle='';
 function buildMindmap(tokens, title){
   _mmTokens=tokens; _mmTitle=title;
   return `<div class="p-label">${title} · 주제별 마인드맵 · 클릭해서 크게 보기</div>
-    <div class="wc-wrap" style="cursor:zoom-in;height:calc(100vh - 200px);min-height:340px" onclick="openMMModal()">
-      <canvas class="mm-canvas" width="600" height="600" style="width:100%;height:100%"></canvas>
+    <div class="wc-wrap" style="cursor:zoom-in" onclick="openMMModal()">
+      <canvas class="mm-canvas" width="600" height="500"></canvas>
     </div>
     <div class="zoom-hint" onclick="openMMModal()">🔍 클릭해서 크게 보기</div>`;
 }
 
 function drawMindmap(canvas, W, H){
-  W=W||canvas.offsetWidth||canvas.parentElement?.offsetWidth||600;
-  H=H||canvas.offsetHeight||canvas.parentElement?.offsetHeight||500;
+  W=window.innerWidth - 64;
+  H=window.innerHeight - 180;
   canvas.width=W; canvas.height=H;
-  canvas.style.width='100%'; canvas.style.height=H+'px';
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
   const ctx=canvas.getContext('2d');
   ctx.clearRect(0,0,W,H);
 
@@ -465,7 +465,9 @@ function openWCModal(wcWrap){
   document.getElementById('modalTitle').textContent=title;
   const modalBody=document.getElementById('modalBody');
   const words=wcWrap.querySelector('.wc-canvas').innerHTML;
-  modalBody.innerHTML=`<div class="modal-wc"><div class="wc-canvas" style="height:520px">${words}</div></div>`;
+  const mH=window.innerHeight-160;
+modalBody.innerHTML=`<div class="modal-wc"><div class="wc-canvas">${words}</div></div>`;
+modalBody.querySelector('.wc-canvas').style.height=mH+'px';
   document.getElementById('modalOverlay').classList.add('on');
   document.body.style.overflow='hidden';
   setTimeout(()=>layoutWC(modalBody.querySelector('.wc-canvas')),80);
