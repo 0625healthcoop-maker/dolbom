@@ -245,7 +245,8 @@ function analyze(){
     tabDefs.push({label:'📋 '+t, tokens:tableMap[t].tokens, type:'table', tableName:t});
   });
 
-  tabDefs.forEach((tab,i)=>{
+  let panelIdx=0;
+  tabDefs.forEach((tab)=>{
     if(tab.type==='sep'){
       const sep=document.createElement('div');
       sep.className='level-sep';
@@ -253,14 +254,15 @@ function analyze(){
       return;
     }
     const btn=document.createElement('button');
-    btn.className='level-btn'+(i===0?' on':'');
+    const idx=panelIdx++;
+    btn.className="level-btn"+(idx===0?' on':'');
     btn.textContent=tab.label;
-    btn.onclick=()=>switchTab(i);
+    btn.onclick=()=>switchTab(idx);
     levelBar.appendChild(btn);
 
     const panel=document.createElement('div');
-    panel.className='panel'+(i===0?' on':'');
-    panel.id='panel'+i;
+    panel.className="panel"+(idx===0?' on':'');
+    panel.id="panel"+idx;
     panel.innerHTML=buildPanel(tab);
     panels.appendChild(panel);
   });
