@@ -8,14 +8,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --forest:#1A3328;--moss:#2D5A3D;--sage:#4A8C5C;
+  --forest:#1A3328;--moss:#2D5A3D;--gold:#C9A84C;--gold2:#E8C96A;
   --mist:#8FBF9A;--dew:#C8E6CD;--paper:#F2F7F3;
-  --gold:#C9A84C;--gold2:#E8C96A;--white:#fff;
   --muted:#6B8C74;--ink:#0C1A14;--border:#D8E8DC;
 }
 body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh}
 
-/* 입력 */
+/* 입력 화면 */
 #inputScreen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;background:var(--forest)}
 .logo{font-size:.7rem;font-weight:700;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
 .main-title{font-family:'Noto Serif KR',serif;font-size:1.7rem;font-weight:700;color:#fff;text-align:center;line-height:1.4;margin-bottom:6px}
@@ -31,78 +30,85 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);color:var(--i
 .hint{font-size:.72rem;color:var(--mist);margin-top:7px;line-height:1.8;opacity:.85}
 .hint strong{color:var(--gold2)}
 .btn-go{width:100%;margin-top:14px;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--forest);border:none;border-radius:12px;font-family:'Noto Sans KR',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer}
-.btn-go:hover{opacity:.9}
 .err{background:rgba(231,111,81,.15);border:1px solid rgba(231,111,81,.4);border-radius:8px;padding:10px 14px;color:#f4a48a;font-size:.78rem;display:none;margin-top:8px}
 
-/* 결과 */
-#resultScreen{display:none}
-.rh{background:var(--forest);padding:18px 20px 14px;position:relative}
+/* 결과 화면 */
+#resultScreen{display:none;height:100vh;display:none;flex-direction:column}
+.rh{background:var(--forest);padding:14px 20px;position:relative;flex-shrink:0}
 .rh::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.rh-eye{font-size:.65rem;letter-spacing:2.5px;color:var(--gold);font-weight:700;text-transform:uppercase;margin-bottom:3px}
-.rh-title{font-family:'Noto Serif KR',serif;font-size:1.15rem;color:#fff;font-weight:700}
-.rh-meta{font-size:.72rem;color:var(--mist);margin-top:3px}
+.rh-eye{font-size:.6rem;letter-spacing:2px;color:var(--gold);font-weight:700;text-transform:uppercase;margin-bottom:2px}
+.rh-title{font-family:'Noto Serif KR',serif;font-size:1rem;color:#fff;font-weight:700}
+.rh-meta{font-size:.68rem;color:var(--mist);margin-top:2px}
 .rh-btns{position:absolute;right:16px;top:50%;transform:translateY(-50%);display:flex;gap:6px}
-.btn-sm{background:rgba(255,255,255,.08);border:1px solid rgba(201,168,76,.25);border-radius:8px;padding:6px 11px;color:var(--gold2);font-size:.72rem;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
+.btn-sm{background:rgba(255,255,255,.08);border:1px solid rgba(201,168,76,.25);border-radius:8px;padding:5px 10px;color:var(--gold2);font-size:.7rem;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
 
-/* 탭 */
-.level-bar{display:flex;background:var(--ink);border-bottom:1px solid rgba(201,168,76,.1);padding:0 12px;overflow-x:auto}
-.level-btn{padding:11px 13px;font-size:.73rem;font-weight:700;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;flex-shrink:0}
+/* 탭바 */
+.level-bar{background:var(--ink);border-bottom:1px solid rgba(201,168,76,.1);padding:0 12px;overflow-x:auto;display:flex;flex-shrink:0;white-space:nowrap}
+.level-btn{display:inline-block;padding:10px 12px;font-size:.7rem;font-weight:700;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;font-family:'Noto Sans KR',sans-serif;flex-shrink:0}
 .level-btn.on{color:var(--gold);border-bottom-color:var(--gold)}
-.level-sep{width:1px;background:rgba(255,255,255,.08);margin:8px 4px;flex-shrink:0}
+.level-sep{display:inline-block;width:1px;background:rgba(255,255,255,.08);margin:8px 4px;vertical-align:middle;height:20px}
 
-.panel{padding:16px;display:none}
+/* 패널 영역 */
+#panelWrap{flex:1;overflow:hidden;position:relative}
+.panel{display:none;width:100%;height:100%;overflow-y:auto;padding:12px 16px}
 .panel.on{display:block}
-.p-label{font-size:.72rem;color:var(--muted);margin-bottom:10px;letter-spacing:.3px}
-.zoom-hint{font-size:.68rem;color:var(--muted);text-align:right;margin-top:6px;cursor:pointer}
+.p-label{font-size:.7rem;color:var(--muted);margin-bottom:8px}
+
+/* Canvas 시각화 */
+.viz-canvas{display:block;width:100%;border-radius:12px;background:#fff;border:1px solid var(--border);cursor:zoom-in}
+.zoom-hint{font-size:.65rem;color:var(--muted);text-align:right;margin-top:4px;cursor:pointer}
 .zoom-hint:hover{color:var(--moss)}
 
-/* 워드클라우드 */
-.wc-wrap{background:#fff;border-radius:16px;border:1px solid var(--border);position:relative;overflow:hidden;cursor:zoom-in}
-.wc-canvas{width:100%;position:relative}
-.wc-word{position:absolute;transform:translate(-50%,-50%);cursor:default;font-family:'Noto Sans KR',sans-serif;font-weight:900;white-space:nowrap;transition:opacity .2s,transform .2s;line-height:1}
-.wc-word:hover{opacity:1!important;transform:translate(-50%,-50%) scale(1.15)!important;z-index:10}
-
 /* 범례 */
-.legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.legend-item{display:flex;align-items:center;gap:4px;font-size:.7rem;color:var(--muted)}
-.legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.legend{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.leg-item{display:flex;align-items:center;gap:3px;font-size:.65rem;color:var(--muted)}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
 /* 순위 */
-.rank-box{background:#fff;border-radius:14px;padding:14px 18px;border:1px solid var(--border)}
-.ri{display:grid;grid-template-columns:24px 1fr 32px;align-items:center;gap:9px;padding:6px 0;border-bottom:1px solid var(--border)}
+.rank-box{background:#fff;border-radius:14px;padding:12px 16px;border:1px solid var(--border)}
+.ri{display:grid;grid-template-columns:22px 1fr 28px;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border)}
 .ri:last-child{border-bottom:none}
-.rn{font-size:.7rem;color:var(--muted);font-weight:700;text-align:right}
-.rw{font-size:.85rem;font-weight:700;color:var(--ink)}
-.rc{font-size:.65rem;padding:1px 6px;border-radius:10px;margin-left:4px;font-weight:700}
-.bar-bg{height:4px;background:var(--dew);border-radius:2px;margin-top:3px}
+.rn{font-size:.68rem;color:var(--muted);font-weight:700;text-align:right}
+.rw{font-size:.82rem;font-weight:700;color:var(--ink)}
+.rc{font-size:.6rem;padding:1px 5px;border-radius:8px;margin-left:3px;font-weight:700}
+.bar-bg{height:4px;background:var(--dew);border-radius:2px;margin-top:2px}
 .bar-f{height:100%;border-radius:2px}
-.rs{font-size:.78rem;font-weight:700;color:var(--muted);text-align:right}
+.rs{font-size:.72rem;font-weight:700;color:var(--muted);text-align:right}
 
-/* 기관별 서브카드 */
-.sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-.sub-card{background:#fff;border-radius:12px;padding:12px 14px;border:1px solid var(--border)}
-.sub-title{font-size:.75rem;font-weight:700;color:var(--moss);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.sub-tags{display:flex;flex-wrap:wrap;gap:4px}
-.sub-tag{font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:12px}
+/* 공통키워드 */
+.common-sec{background:#fff;border-radius:14px;border:1px solid var(--border);padding:14px 16px;margin-bottom:10px}
+.common-label{font-size:.72rem;font-weight:700;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid}
+.common-tags{display:flex;flex-wrap:wrap;align-items:flex-end;gap:4px}
+.ctag{display:inline-flex;flex-direction:column;align-items:center;margin:3px 5px}
+.ctag-word{font-weight:900;padding:3px 9px;border-radius:7px;border:1.5px solid}
+.ctag-sub{font-size:.58rem;color:var(--muted);margin-top:2px}
+
+/* 기관 서브카드 */
+.sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.sub-card{background:#fff;border-radius:10px;padding:10px 12px;border:1px solid var(--border)}
+.sub-title{font-size:.7rem;font-weight:700;color:var(--moss);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+.sub-tags{display:flex;flex-wrap:wrap;gap:3px}
+.sub-tag{font-size:.65rem;font-weight:700;padding:2px 6px;border-radius:10px}
 
 /* 요약 */
-.sum-card{background:var(--forest);border-radius:14px;padding:18px 20px;margin:8px 16px 16px;position:relative;overflow:hidden}
+.sum-card{background:var(--forest);border-radius:14px;padding:16px 18px;margin-top:10px;position:relative;overflow:hidden}
 .sum-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold2),transparent)}
-.sum-eye{font-size:.65rem;letter-spacing:2px;color:var(--gold);font-weight:700;text-transform:uppercase;margin-bottom:7px}
-.sum-txt{font-family:'Noto Serif KR',serif;font-size:.88rem;color:rgba(255,255,255,.88);line-height:1.85}
-.stat-row{display:flex;gap:12px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(201,168,76,.15)}
+.sum-eye{font-size:.62rem;letter-spacing:2px;color:var(--gold);font-weight:700;text-transform:uppercase;margin-bottom:6px}
+.sum-txt{font-family:'Noto Serif KR',serif;font-size:.85rem;color:rgba(255,255,255,.88);line-height:1.8}
+.stat-row{display:flex;gap:10px;margin-top:10px;padding-top:8px;border-top:1px solid rgba(201,168,76,.15)}
 .stat{flex:1;text-align:center}
-.stat-n{font-family:'Noto Serif KR',serif;font-size:1.35rem;font-weight:700;color:var(--gold2)}
-.stat-l{font-size:.63rem;color:var(--mist);margin-top:2px}
+.stat-n{font-family:'Noto Serif KR',serif;font-size:1.2rem;font-weight:700;color:var(--gold2)}
+.stat-l{font-size:.6rem;color:var(--mist);margin-top:1px}
 
 /* 모달 */
-.modal-overlay{display:none;position:fixed;inset:0;z-index:999;background:rgba(8,16,12,.95);align-items:center;justify-content:center;padding:16px}
-.modal-overlay.on{display:flex}
-.modal-box{background:#fff;border-radius:20px;width:100%;max-width:960px;max-height:95vh;overflow-y:auto;position:relative;padding:24px}
-.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--gold)}
-.modal-htitle{font-family:'Noto Serif KR',serif;font-size:1.1rem;font-weight:700;color:var(--forest)}
-.modal-close{background:var(--forest);color:var(--gold2);border:none;border-radius:8px;padding:7px 16px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
-.modal-wc{width:100%;position:relative;background:#fff;border-radius:12px;overflow:hidden}
+.modal-ov{display:none;position:fixed;inset:0;z-index:999;background:rgba(8,16,12,.96);align-items:center;justify-content:center;padding:12px}
+.modal-ov.on{display:flex}
+.modal-box{background:#fff;border-radius:16px;width:100%;max-width:1100px;max-height:97vh;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:2px solid var(--gold);flex-shrink:0}
+.modal-ht{font-family:'Noto Serif KR',serif;font-size:1rem;font-weight:700;color:var(--forest)}
+.modal-close{background:var(--forest);color:var(--gold2);border:none;border-radius:8px;padding:6px 14px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
+.modal-body{flex:1;overflow:hidden;padding:12px}
+#modalCanvas{display:block;border-radius:8px;background:#fff}
 </style>
 </head>
 <body>
@@ -120,7 +126,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);color:var(--i
     <div class="divider"></div>
     <label>구글시트 전체 붙여넣기</label>
     <textarea id="pasteBox" placeholder="구글시트 ★통합 탭에서 Ctrl+A → Ctrl+C 후 여기에 Ctrl+V&#10;&#10;A열: 테이블명 (구청1, 구청2, 보건소1...)&#10;D열: 의견·키워드"></textarea>
-    <p class="hint">📋 <strong>★통합 탭</strong> 전체 복사 후 붙여넣기 — 한 번만!</p>
+    <p class="hint">📋 <strong>★통합 탭</strong> 전체 복사 후 붙여넣기</p>
     <div class="err" id="errBox"></div>
     <button class="btn-go" onclick="analyze()">키워드 추출 + 시각화</button>
   </div>
@@ -137,56 +143,49 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);color:var(--i
     </div>
   </div>
   <div class="level-bar" id="levelBar"></div>
-  <div id="panels"></div>
-  <div class="sum-card">
-    <div class="sum-eye">전체 요약</div>
-    <div class="sum-txt" id="sumTxt"></div>
-    <div class="stat-row" id="statRow"></div>
-  </div>
+  <div id="panelWrap"><div id="panels"></div></div>
 </div>
 
 <!-- 모달 -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModalBg(event)">
+<div class="modal-ov" id="modalOv" onclick="closeModalBg(event)">
   <div class="modal-box">
-    <div class="modal-header">
-      <div class="modal-htitle" id="modalTitle"></div>
+    <div class="modal-hd">
+      <div class="modal-ht" id="modalTitle"></div>
       <button class="modal-close" onclick="closeModal()">✕ 닫기</button>
     </div>
-    <div id="modalBody"></div>
+    <div class="modal-body" id="modalBody">
+      <canvas id="modalCanvas"></canvas>
+    </div>
   </div>
 </div>
 
 <script>
-// ── 색상 팔레트 (풍부하고 다양하게) ──
-const THEMES = {
-  '인력':      {bg:'#1A3328', fg:'#C8E6CD', light:'#E1F5EE'},
-  '예산·재정': {bg:'#C9A84C', fg:'#1A3328', light:'#FBF3DC'},
-  '연계·협력': {bg:'#185FA5', fg:'#fff',    light:'#E6F1FB'},
-  '서비스':    {bg:'#6B3FA0', fg:'#fff',    light:'#F0E8FB'},
-  '인프라':    {bg:'#D85A30', fg:'#fff',    light:'#FAECE7'},
-  '대상자':    {bg:'#0F6E56', fg:'#fff',    light:'#E1F5EE'},
-  '정책·제도': {bg:'#993556', fg:'#fff',    light:'#FBEAF0'},
-  '기타':      {bg:'#5F5E5A', fg:'#fff',    light:'#F1EFE8'},
+// ── 색상 테마 ──
+const THEMES={
+  '인력':      {bg:'#1A3328',fg:'#C8E6CD',light:'#E1F5EE'},
+  '예산·재정': {bg:'#B8860B',fg:'#fff',   light:'#FBF3DC'},
+  '연계·협력': {bg:'#185FA5',fg:'#fff',   light:'#E6F1FB'},
+  '서비스':    {bg:'#6B3FA0',fg:'#fff',   light:'#F0E8FB'},
+  '인프라':    {bg:'#C0392B',fg:'#fff',   light:'#FAECE7'},
+  '대상자':    {bg:'#0F6E56',fg:'#fff',   light:'#E1F5EE'},
+  '정책·제도': {bg:'#8B2252',fg:'#fff',   light:'#FBEAF0'},
+  '기타':      {bg:'#555',   fg:'#fff',   light:'#F1EFE8'},
 };
-
-const THEME_MAP = {
-  '인력':      ['인력','간호사','요양보호사','종사자','담당자','사회복지사','치료사','의사','코디네이터','작업치료사','물리치료사'],
-  '예산·재정': ['예산','재정','수가','비용','급여','부담금','지원금','칸막이','비용'],
-  '연계·협력': ['연계','협력','연결','창구','네트워크','회의','공유','정보','의뢰','통합','연락','조정'],
-  '서비스':    ['서비스','돌봄','방문','재활','간호','교육','상담','관리','지원','프로그램','말벗','동행'],
-  '인프라':    ['시스템','DB','자원','인프라','플랫폼','맵','목록','체계','환경','구조'],
-  '대상자':    ['어르신','독거','치매','장애','이주민','외국인','수급자','환자','당사자','가족','보호자'],
-  '정책·제도': ['정책','제도','법','기준','역할','지위','공식','허브','수가','칸막이','규정'],
+const THEME_MAP={
+  '인력':      ['인력','간호사','요양보호사','종사자','담당자','사회복지사','치료사','의사','코디'],
+  '예산·재정': ['예산','재정','수가','비용','급여','부담금','지원금'],
+  '연계·협력': ['연계','협력','연결','창구','네트워크','회의','공유','정보','의뢰','조정'],
+  '서비스':    ['서비스','돌봄','방문','재활','간호','교육','상담','관리','지원','프로그램','말벗'],
+  '인프라':    ['시스템','DB','자원','인프라','맵','목록','체계','환경'],
+  '대상자':    ['어르신','독거','치매','장애','이주민','외국인','수급자','환자','가족','보호자'],
+  '정책·제도': ['정책','제도','기준','역할','지위','공식','허브','칸막이','규정'],
 };
-
-function classifyWord(word){
-  for(const [theme, kws] of Object.entries(THEME_MAP)){
-    if(kws.some(k=>word.includes(k))) return theme;
-  }
+function classify(w){
+  for(const[t,ks]of Object.entries(THEME_MAP)){if(ks.some(k=>w.includes(k)))return t;}
   return '기타';
 }
 
-const STOP = new Set(['있어','없어','너무','정말','그냥','이게','이거','거기','이렇게','저렇게',
+const STOP=new Set(['있어','없어','너무','정말','그냥','이게','이거','거기','이렇게','저렇게',
   '합니다','있습니다','없습니다','됩니다','해야','해서','하고','하는','하면','하지','하기',
   '그리고','그런데','그래서','하지만','때문에','위해서','위한','대한','관련','통해','따라',
   '이런','저런','어떤','같은','다른','많은','적은','필요','현재','현장','지금','아직',
@@ -197,419 +196,358 @@ const STOP = new Set(['있어','없어','너무','정말','그냥','이게','이
   '재가','병원','복지관','당사자','보호자','테이블','구분','행정','보건','안내','심각','어려움','부족']);
 
 function tokenize(text){
-  return text.replace(/\t/g,' ')
-    .split(/[\n,，、·\.\!\?\;\:\(\)\[\]\{\}\"\'\/\\]+/)
-    .flatMap(s=>s.split(/\s+/))
-    .map(w=>w.trim().replace(/^[·\-\*\#\d]+/,'').trim())
-    .filter(w=>w.length>=2 && !STOP.has(w) && !/^\d+$/.test(w));
+  return text.replace(/\t/g,' ').split(/[\n,，·\.\!\?\;\:\(\)\[\]\{\}\"\'\/\\]+/)
+    .flatMap(s=>s.split(/\s+/)).map(w=>w.trim().replace(/^[·\-\*\#\d]+/,'').trim())
+    .filter(w=>w.length>=2&&!STOP.has(w)&&!/^\d+$/.test(w));
 }
-
 function countWords(tokens){
-  const m={};
-  tokens.forEach(w=>{m[w]=(m[w]||0)+1});
+  const m={};tokens.forEach(w=>{m[w]=(m[w]||0)+1});
   return Object.entries(m).sort((a,b)=>b[1]-a[1]);
 }
-
 function parseRows(text){
   const rows=[];
-  const lines=text.split('\n');
-  for(const line of lines){
+  for(const line of text.split('\n')){
     if(!line.trim()) continue;
     const cells=line.split('\t');
-    const tc=cells[0]?.trim();
-    const oc=cells[3]?.trim()||cells[2]?.trim()||cells[1]?.trim()||'';
-    if(tc && oc && tc.length<=15 && !/^이름|^역할|^소속|^의견|^키워드|^테이블/.test(tc) && !/^[A-Z]/.test(tc)){
-      rows.push({table:tc, opinion:oc});
-    }
+    const tc=cells[0]?.trim(),oc=cells[3]?.trim()||cells[2]?.trim()||cells[1]?.trim()||'';
+    if(tc&&oc&&tc.length<=15&&!/^이름|^역할|^소속|^의견|^키워드|^테이블/.test(tc)&&!/^[A-Z]/.test(tc))
+      rows.push({table:tc,opinion:oc});
   }
   return rows;
 }
+function getGroup(t){return t.replace(/\s*\d+$/,'').trim();}
 
-function getGroup(t){ return t.replace(/\s*\d+$/,'').trim(); }
-
-let panelCount=0;
-let _groupMap={}, _groups=[], _allTokens=[], _tableMap={}, _tables=[];
+let _tmap={},_gmap={},_all=[],_tables=[],_groups=[];
+let _panelCount=0;
 
 function analyze(){
   const text=document.getElementById('pasteBox').value.trim();
   if(text.length<10){showErr('내용을 붙여넣어 주세요.');return;}
   hideErr();
   const rows=parseRows(text);
-  if(rows.length===0){showErr('A열에 테이블명(구청1, 보건소1...)이 있는지 확인해주세요.');return;}
-
-  _tableMap={}; _groupMap={}; _allTokens=[];
+  if(!rows.length){showErr('A열에 테이블명(구청1, 보건소1...)이 있는지 확인해주세요.');return;}
+  _tmap={};_gmap={};_all=[];
   rows.forEach(r=>{
-    const t=r.table, g=getGroup(t);
-    const tokens=tokenize(r.opinion);
-    if(!_tableMap[t]) _tableMap[t]={group:g,tokens:[]};
-    _tableMap[t].tokens.push(...tokens);
-    if(!_groupMap[g]) _groupMap[g]=[];
-    _groupMap[g].push(...tokens);
-    _allTokens.push(...tokens);
+    const t=r.table,g=getGroup(t),tok=tokenize(r.opinion);
+    if(!_tmap[t])_tmap[t]={group:g,tokens:[]};
+    _tmap[t].tokens.push(...tok);
+    if(!_gmap[g])_gmap[g]=[];
+    _gmap[g].push(...tok);
+    _all.push(...tok);
   });
-  _tables=Object.keys(_tableMap);
-  _groups=Object.keys(_groupMap);
+  _tables=Object.keys(_tmap);_groups=Object.keys(_gmap);
 
   const title=document.getElementById('evTitle').value.trim()||'통합돌봄 민관협력 워크숍';
   const date=document.getElementById('evDate').value.trim();
   document.getElementById('rhTitle').textContent=title;
   document.getElementById('rhMeta').textContent=[date,_tables.length+'개 테이블',_groups.length+'개 기관'].filter(Boolean).join('  ·  ');
 
-  const levelBar=document.getElementById('levelBar');
-  const panels=document.getElementById('panels');
-  levelBar.innerHTML=''; panels.innerHTML=''; panelCount=0;
+  const bar=document.getElementById('levelBar'),pnls=document.getElementById('panels');
+  bar.innerHTML='';pnls.innerHTML='';_panelCount=0;
 
-  addTab(levelBar,panels,'🌐 전체 통합',()=>buildWC(_allTokens,'전체 통합 워드클라우드'));
-  addTab(levelBar,panels,'🌿 마인드맵',()=>buildMindmap(_allTokens,'통합돌봄'));
-  addTab(levelBar,panels,'≡ 전체 순위',()=>buildRank(_allTokens));
-  addTab(levelBar,panels,'🎯 공통 키워드',()=>buildCommon());
-  addTab(levelBar,panels,'📡 기관별 비교',()=>buildRadar());
-
-  const sep1=document.createElement('div'); sep1.className='level-sep'; levelBar.appendChild(sep1);
+  addTab(bar,pnls,'🌐 전체 워드클라우드',()=>buildWC(_all,'전체 통합'));
+  addTab(bar,pnls,'🌿 마인드맵',()=>buildMM(_all,'통합돌봄'));
+  addTab(bar,pnls,'≡ 순위',()=>buildRank(_all));
+  addTab(bar,pnls,'🎯 공통 키워드',()=>buildCommon());
+  addTab(bar,pnls,'📡 기관별 비교',()=>buildRadar());
+  bar.appendChild(Object.assign(document.createElement('span'),{className:'level-sep'}));
   _groups.forEach(g=>{
-    const sub=_tables.filter(t=>getGroup(t)===g).map(t=>({name:t,tokens:_tableMap[t].tokens}));
-    addTab(levelBar,panels,'📂 '+g,()=>buildGroupPanel(_groupMap[g],g,sub));
+    const sub=_tables.filter(t=>getGroup(t)===g).map(t=>({name:t,tokens:_tmap[t].tokens}));
+    addTab(bar,pnls,'📂 '+g,()=>buildGroup(_gmap[g],g,sub));
   });
+  bar.appendChild(Object.assign(document.createElement('span'),{className:'level-sep'}));
+  _tables.forEach(t=>addTab(bar,pnls,'📋 '+t,()=>buildWC(_tmap[t].tokens,t)));
 
-  const sep2=document.createElement('div'); sep2.className='level-sep'; levelBar.appendChild(sep2);
-  _tables.forEach(t=>{
-    addTab(levelBar,panels,'📋 '+t,()=>buildWC(_tableMap[t].tokens,t));
-  });
-
-  const top5=countWords(_allTokens).slice(0,5).map(w=>w[0]).join(', ');
-  document.getElementById('sumTxt').textContent=
-    `이번 워크숍에서 가장 많이 언급된 키워드는 ${top5} 등입니다. ${_groups.length}개 기관 ${_tables.length}개 테이블에서 의견이 수집되었습니다.`;
-  document.getElementById('statRow').innerHTML=`
-    <div class="stat"><div class="stat-n">${_tables.length}</div><div class="stat-l">참여 테이블</div></div>
-    <div class="stat"><div class="stat-n">${_groups.length}</div><div class="stat-l">기관 유형</div></div>
-    <div class="stat"><div class="stat-n">${countWords(_allTokens).length}</div><div class="stat-l">핵심 키워드</div></div>`;
-
+  const top5=countWords(_all).slice(0,5).map(w=>w[0]).join(', ');
   document.getElementById('inputScreen').style.display='none';
-  document.getElementById('resultScreen').style.display='block';
+  const rs=document.getElementById('resultScreen');
+  rs.style.display='flex';
   renderPanel(0);
 }
 
-function addTab(bar,panels,label,fn){
-  const idx=panelCount++;
+function addTab(bar,pnls,label,fn){
+  const idx=_panelCount++;
   const btn=document.createElement('button');
   btn.className='level-btn'+(idx===0?' on':'');
-  btn.textContent=label;
-  btn.onclick=()=>switchTab(idx);
+  btn.textContent=label;btn.onclick=()=>switchTab(idx);
   bar.appendChild(btn);
   const p=document.createElement('div');
   p.className='panel'+(idx===0?' on':'');
-  p.id='panel'+idx;
-  p._fn=fn;
-  panels.appendChild(p);
+  p.id='panel'+idx;p._fn=fn;
+  pnls.appendChild(p);
 }
 
 function renderPanel(idx){
   const p=document.getElementById('panel'+idx);
-  if(p&&p._fn&&!p._done){
-    p.innerHTML=p._fn();
-    p._done=true;
-    setTimeout(()=>{
-      const c=p.querySelector('.wc-canvas');
-      const m=p.querySelector('.mm-canvas');
-      if(c){
-        // 부모 크기 강제 확인
-        const wrap=c.parentElement;
-        const W=wrap.offsetWidth||window.innerWidth-32;
-        c.style.width=W+'px';
-        layoutWC(c, W);
-      }
-      if(m) drawMindmap(m);
-    }, 200);
-  }
+  if(!p||!p._fn||p._done)return;
+  p.innerHTML=p._fn();p._done=true;
+  const canvas=p.querySelector('.viz-canvas');
+  if(canvas) setTimeout(()=>drawOnCanvas(canvas),50);
 }
 
 function switchTab(idx){
   document.querySelectorAll('.level-btn').forEach((b,i)=>b.classList.toggle('on',i===idx));
   document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('on',i===idx));
+  renderPanel(idx);
+  // 이미 렌더됐으면 캔버스 재그리기
   const p=document.getElementById('panel'+idx);
   if(p&&p._done){
-    // 이미 렌더됐으면 레이아웃만 다시
-    setTimeout(()=>{
-      const c=p.querySelector('.wc-canvas');
-      if(c){ const W=c.parentElement?.offsetWidth||window.innerWidth-32; layoutWC(c,W); }
-      const m=p.querySelector('.mm-canvas');
-      if(m) drawMindmap(m);
-    },100);
-  } else {
-    renderPanel(idx);
+    const canvas=p.querySelector('.viz-canvas');
+    if(canvas) setTimeout(()=>drawOnCanvas(canvas),50);
   }
 }
 
-// ── 워드클라우드 ──
-function buildWC(tokens, title){
-  const counts=countWords(tokens).slice(0,45);
-  const max=counts[0]?.[1]||1;
-  const words=counts.map(w=>{
-    const theme=classifyWord(w[0]);
-    const col=THEMES[theme]||THEMES['기타'];
-    const ratio=w[1]/max;
-    const size=Math.round(11+ratio*30);
-    const rot=[-20,-12,-6,0,0,0,6,12,20][Math.floor(Math.random()*9)];
-    return `<span class="wc-word" data-size="${size}" data-rot="${rot}"
-      style="font-size:${size}px;color:${col.bg};opacity:${(0.5+ratio*0.5).toFixed(2)};transform:translate(-50%,-50%) rotate(${rot}deg)"
-      title="${theme} · ${w[1]}회">${w[0]}</span>`;
-  }).join('');
-  const legend=Object.entries(THEMES).map(([n,c])=>
-    `<div class="legend-item"><div class="legend-dot" style="background:${c.bg}"></div>${n}</div>`
-  ).join('');
-  return `<div class="p-label">${title} · 크기=언급빈도 · 색=주제</div>
-    <div class="wc-wrap" onclick="openWCModal(this)">
-      <div class="wc-canvas">${words}</div>
-    </div>
-    <div class="legend">${legend}</div>
-    <div class="zoom-hint" onclick="openWCModal(this.previousElementSibling.previousElementSibling)">🔍 클릭해서 크게 보기</div>`;
-}
-
-// ── 마인드맵 (SVG) ──
-let _mmTokens=[], _mmTitle='';
-function buildMindmap(tokens, title){
-  _mmTokens=tokens; _mmTitle=title;
-  return `<div class="p-label">${title} · 주제별 마인드맵 · 클릭해서 크게 보기</div>
-    <div class="wc-wrap" style="cursor:zoom-in" onclick="openMMModal()">
-      <canvas class="mm-canvas" width="600" height="500"></canvas>
-    </div>
-    <div class="zoom-hint" onclick="openMMModal()">🔍 클릭해서 크게 보기</div>`;
-}
-
-function drawMindmap(canvas, W, H){
-  W=window.innerWidth - 64;
-  H=window.innerHeight - 180;
+// ── Canvas에 그리기 (WC or MM 공통) ──
+function drawOnCanvas(canvas){
+  const type=canvas.dataset.type;
+  const W=canvas.parentElement.offsetWidth-32||600;
+  const H=Math.max(window.innerHeight-220,320);
   canvas.width=W; canvas.height=H;
   canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  if(type==='wc') drawWC(canvas,JSON.parse(canvas.dataset.words),W,H);
+  if(type==='mm') drawMindmapCanvas(canvas,canvas.dataset.title,W,H);
+}
+
+// ── 워드클라우드 빌더 ──
+function buildWC(tokens,title){
+  const counts=countWords(tokens).slice(0,45);
+  return `<div class="p-label">${title} · 크기=언급빈도 · 색=주제</div>
+    <canvas class="viz-canvas" data-type="wc" data-words='${JSON.stringify(counts)}' onclick="openModal(this,'${title} 워드클라우드','wc')"></canvas>
+    <div class="legend">${Object.entries(THEMES).map(([n,c])=>`<div class="leg-item"><div class="leg-dot" style="background:${c.bg}"></div>${n}</div>`).join('')}</div>
+    <div class="zoom-hint" onclick="openModal(this.previousElementSibling.previousElementSibling,'${title} 워드클라우드','wc')">🔍 클릭해서 크게 보기</div>`;
+}
+
+function drawWC(canvas,counts,W,H){
   const ctx=canvas.getContext('2d');
   ctx.clearRect(0,0,W,H);
-
-  const counts=countWords(_mmTokens);
   const max=counts[0]?.[1]||1;
-
-  // 주제별 그룹
-  const themeGroups={};
-  counts.slice(0,40).forEach(w=>{
-    const t=classifyWord(w[0]);
-    if(!themeGroups[t]) themeGroups[t]=[];
-    themeGroups[t].push({word:w[0],count:w[1]});
+  const placed=[];
+  const cx=W/2,cy=H/2;
+  counts.forEach(([word,cnt])=>{
+    const col=THEMES[classify(word)]||THEMES['기타'];
+    const ratio=cnt/max;
+    const size=Math.round(12+ratio*Math.min(W,H)*0.08);
+    const rot=[-18,-10,-5,0,0,0,5,10,18][Math.floor(Math.random()*9)]*Math.PI/180;
+    ctx.save();
+    ctx.font=`900 ${size}px "Noto Sans KR",sans-serif`;
+    const tw=ctx.measureText(word).width;
+    const th=size*1.2;
+    let x,y,tries=0,angle=Math.random()*Math.PI*2,r=0;
+    do{angle+=0.4;r+=1.5;x=cx+r*Math.cos(angle);y=cy+r*Math.sin(angle)*0.7;tries++;}
+    while(tries<400&&!fits(x,y,tw,th,rot,placed,W,H));
+    placed.push({x,y,w:tw,h:th,rot});
+    ctx.translate(x,y);ctx.rotate(rot);
+    ctx.globalAlpha=0.55+ratio*0.45;
+    ctx.fillStyle=col.bg;
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(word,0,0);
+    ctx.restore();
   });
+}
 
-  const themeKeys=Object.keys(themeGroups);
-  const cx=W/2, cy=H/2;
-  const r1=Math.min(W,H)*0.18; // 중심→주제
-  const r2=Math.min(W,H)*0.35; // 주제→키워드
+function fits(x,y,w,h,rot,placed,W,H){
+  if(x-w/2<4||x+w/2>W-4||y-h/2<4||y+h/2>H-4)return false;
+  for(const p of placed){if(Math.abs(x-p.x)<(w+p.w)/2+8&&Math.abs(y-p.y)<(h+p.h)/2+5)return false;}
+  return true;
+}
 
-  // 중심 원
-  const CR=Math.min(W,H)*0.085;
-  const grad=ctx.createRadialGradient(cx,cy,0,cx,cy,CR);
-  grad.addColorStop(0,'#2D5A3D'); grad.addColorStop(1,'#1A3328');
-  ctx.beginPath(); ctx.arc(cx,cy,CR,0,Math.PI*2);
-  ctx.fillStyle=grad; ctx.fill();
-  ctx.strokeStyle='#C9A84C'; ctx.lineWidth=2; ctx.stroke();
-  ctx.fillStyle='#fff'; ctx.font='bold 13px Noto Sans KR,sans-serif';
-  ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText('통합돌봄',cx,cy-6);
-  ctx.font='10px Noto Sans KR,sans-serif';
-  ctx.fillStyle='#C9A84C'; ctx.fillText('민관협력',cx,cy+9);
+// ── 마인드맵 빌더 ──
+function buildMM(tokens,title){
+  return `<div class="p-label">${title} 마인드맵 · 주제별 키워드</div>
+    <canvas class="viz-canvas" data-type="mm" data-title="${title}" onclick="openModal(this,'${title} 마인드맵','mm')"></canvas>
+    <div class="zoom-hint" onclick="openModal(this.previousElementSibling,'${title} 마인드맵','mm')">🔍 클릭해서 크게 보기</div>`;
+}
 
-  themeKeys.forEach((theme,ti)=>{
-    const angle=(ti/themeKeys.length)*Math.PI*2-Math.PI/2;
-    const tx=cx+r1*Math.cos(angle), ty=cy+r1*Math.sin(angle);
+function drawMindmapCanvas(canvas, mmTitle, W, H){
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const counts=countWords(_all);
+  const max=counts[0]?.[1]||1;
+  const groups={};
+  counts.slice(0,48).forEach(([w,c])=>{
+    const t=classify(w);
+    if(!groups[t])groups[t]=[];
+    groups[t].push({word:w,count:c});
+  });
+  const keys=Object.keys(groups);
+  const cx=W/2,cy=H/2;
+  const R1=Math.min(W,H)*0.17;
+  const R2=Math.min(W,H)*0.38;
+  const CR=Math.min(W,H)*0.09;
+
+  // 중심
+  const g=ctx.createRadialGradient(cx,cy,0,cx,cy,CR);
+  g.addColorStop(0,'#2D5A3D');g.addColorStop(1,'#1A3328');
+  ctx.beginPath();ctx.arc(cx,cy,CR,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+  ctx.strokeStyle='#C9A84C';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.font=`bold ${Math.round(CR*0.32)}px "Noto Sans KR",sans-serif`;
+  ctx.fillText('통합돌봄',cx,cy-CR*0.15);
+  ctx.font=`${Math.round(CR*0.22)}px "Noto Sans KR",sans-serif`;
+  ctx.fillStyle='#C9A84C';ctx.fillText('민관협력',cx,cy+CR*0.28);
+
+  keys.forEach((theme,ti)=>{
+    const angle=(ti/keys.length)*Math.PI*2-Math.PI/2;
+    const tx=cx+R1*Math.cos(angle),ty=cy+R1*Math.sin(angle);
     const col=THEMES[theme]||THEMES['기타'];
+    const TR=Math.min(W,H)*0.055;
 
-    // 중심→주제 연결선
-    ctx.beginPath(); ctx.moveTo(cx+44*Math.cos(angle),cy+44*Math.sin(angle));
-    ctx.lineTo(tx,ty);
-    ctx.strokeStyle=col.bg+'99'; ctx.lineWidth=2; ctx.stroke();
+    // 중심→주제 선
+    ctx.beginPath();ctx.moveTo(cx+CR*Math.cos(angle),cy+CR*Math.sin(angle));
+    ctx.lineTo(tx,ty);ctx.strokeStyle=col.bg+'88';ctx.lineWidth=2;ctx.stroke();
 
     // 주제 원
-    const TR=Math.min(W,H)*0.052;
-    ctx.beginPath(); ctx.arc(tx,ty,TR,0,Math.PI*2);
-    ctx.fillStyle=col.bg; ctx.fill();
-    ctx.font=`bold ${Math.round(Math.min(W,H)*0.018)}px Noto Sans KR,sans-serif`;
-    ctx.fillStyle=col.fg; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.beginPath();ctx.arc(tx,ty,TR,0,Math.PI*2);ctx.fillStyle=col.bg;ctx.fill();
+    ctx.font=`bold ${Math.round(TR*0.36)}px "Noto Sans KR",sans-serif`;
+    ctx.fillStyle=col.fg;ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText(theme,tx,ty);
 
     // 키워드 노드
-    const kws=themeGroups[theme].slice(0,4);
+    const kws=groups[theme].slice(0,5);
     kws.forEach((kw,ki)=>{
-      const spread=(ki-(kws.length-1)/2)*36;
-      const perpX=Math.cos(angle+Math.PI/2)*spread;
-      const perpY=Math.sin(angle+Math.PI/2)*spread;
-      const push=r2+(kw.count/max)*20;
-      const kx=tx+Math.cos(angle)*push+perpX;
-      const ky=ty+Math.sin(angle)*push+perpY;
+      const spread=(ki-(kws.length-1)/2)*(Math.min(W,H)*0.075);
+      const px=Math.cos(angle+Math.PI/2)*spread,py=Math.sin(angle+Math.PI/2)*spread;
+      const push=R2+(kw.count/max)*Math.min(W,H)*0.05;
+      const kx=tx+Math.cos(angle)*push+px,ky=ty+Math.sin(angle)*push+py;
+      const kr=Math.min(W,H)*0.028+(kw.count/max)*Math.min(W,H)*0.015;
 
-      // 주제→키워드 선
-      ctx.beginPath(); ctx.moveTo(tx+TR*Math.cos(angle),ty+TR*Math.sin(angle));
-      ctx.lineTo(kx,ky);
-      ctx.strokeStyle=col.bg+'55'; ctx.lineWidth=1.2; ctx.stroke();
+      ctx.beginPath();ctx.moveTo(tx+TR*Math.cos(angle),ty+TR*Math.sin(angle));
+      ctx.lineTo(kx,ky);ctx.strokeStyle=col.bg+'44';ctx.lineWidth=1.2;ctx.stroke();
 
-      // 키워드 박스
-      const kr=13+(kw.count/max)*8;
-      ctx.beginPath(); ctx.arc(kx,ky,kr,0,Math.PI*2);
-      ctx.fillStyle='#fff'; ctx.fill();
-      ctx.strokeStyle=col.bg; ctx.lineWidth=1.5; ctx.stroke();
-      ctx.font=`bold ${Math.round(8+kw.count/max*3)}px Noto Sans KR,sans-serif`;
-      ctx.fillStyle=col.bg; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.beginPath();ctx.arc(kx,ky,kr,0,Math.PI*2);
+      ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=col.bg;ctx.lineWidth=1.5;ctx.stroke();
+      ctx.font=`bold ${Math.round(kr*0.65)}px "Noto Sans KR",sans-serif`;
+      ctx.fillStyle=col.bg;ctx.textAlign='center';ctx.textBaseline='middle';
       ctx.fillText(kw.word,kx,ky);
     });
   });
 }
 
 // ── 모달 ──
-function openWCModal(wcWrap){
-  const titleEl=wcWrap.closest('.panel').querySelector('.p-label');
-  const title=titleEl?titleEl.textContent.split('·')[0].trim():'워드클라우드';
+let _modalType='',_modalData=null;
+function openModal(canvas,title,type){
   document.getElementById('modalTitle').textContent=title;
-  const modalBody=document.getElementById('modalBody');
-  const words=wcWrap.querySelector('.wc-canvas').innerHTML;
-  const mH=window.innerHeight-160;
-modalBody.innerHTML=`<div class="modal-wc"><div class="wc-canvas">${words}</div></div>`;
-modalBody.querySelector('.wc-canvas').style.height=mH+'px';
-  document.getElementById('modalOverlay').classList.add('on');
-  document.body.style.overflow='hidden';
-  setTimeout(()=>layoutWC(modalBody.querySelector('.wc-canvas')),80);
-}
-
-function openMMModal(){
-  document.getElementById('modalTitle').textContent=_mmTitle+' 마인드맵';
-  const modalBody=document.getElementById('modalBody');
-  modalBody.innerHTML=`<canvas id="modalMM" style="width:100%;border-radius:12px;background:#fff"></canvas>`;
-  document.getElementById('modalOverlay').classList.add('on');
+  _modalType=type;
+  if(type==='wc') _modalData=JSON.parse(canvas.dataset.words);
+  document.getElementById('modalOv').classList.add('on');
   document.body.style.overflow='hidden';
   setTimeout(()=>{
-    const canvas=document.getElementById('modalMM');
-    const W=canvas.offsetWidth||880;
-    drawMindmap(canvas,W,520);
-    canvas.style.height=(window.innerHeight*0.85-120)+'px';
+    const mb=document.getElementById('modalBody');
+    const mc=document.getElementById('modalCanvas');
+    const W=mb.offsetWidth-24||900;
+    const H=mb.offsetHeight-24||window.innerHeight*0.8;
+    mc.width=W;mc.height=H;mc.style.width=W+'px';mc.style.height=H+'px';
+    if(type==='wc') drawWC(mc,_modalData,W,H);
+    if(type==='mm') drawMindmapCanvas(mc,'통합돌봄',W,H);
   },80);
 }
-
-function closeModalBg(e){ if(e.target===document.getElementById('modalOverlay')) closeModal(); }
-function closeModal(){ document.getElementById('modalOverlay').classList.remove('on'); document.body.style.overflow=''; }
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+function closeModalBg(e){if(e.target===document.getElementById('modalOv'))closeModal();}
+function closeModal(){document.getElementById('modalOv').classList.remove('on');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
 // ── 순위 ──
 function buildRank(tokens){
   const counts=countWords(tokens).slice(0,20);
   const max=counts[0]?.[1]||1;
-  const items=counts.map((w,i)=>{
-    const theme=classifyWord(w[0]);
-    const col=THEMES[theme]||THEMES['기타'];
-    return `<div class="ri">
-      <span class="rn">${i+1}</span>
-      <div><div class="rw">${w[0]} <span class="rc" style="background:${col.bg};color:${col.fg}">${theme}</span></div>
-        <div class="bar-bg"><div class="bar-f" style="width:${Math.round(w[1]/max*100)}%;background:${col.bg}"></div></div>
-      </div><span class="rs">${w[1]}</span></div>`;
-  }).join('');
-  return `<div class="p-label">전체 통합 · 언급 빈도 순위</div><div class="rank-box">${items}</div>`;
+  return `<div class="p-label">전체 통합 · 언급 빈도 순위</div>
+    <div class="rank-box">${counts.map(([w,c],i)=>{
+      const col=THEMES[classify(w)]||THEMES['기타'];
+      return `<div class="ri"><span class="rn">${i+1}</span>
+        <div><div class="rw">${w}<span class="rc" style="background:${col.bg};color:${col.fg}">${classify(w)}</span></div>
+        <div class="bar-bg"><div class="bar-f" style="width:${Math.round(c/max*100)}%;background:${col.bg}"></div></div></div>
+        <span class="rs">${c}</span></div>`;
+    }).join('')}</div>`;
 }
 
 // ── 공통 키워드 ──
 function buildCommon(){
   if(_groups.length<2) return '<div class="p-label">기관이 2개 이상 있어야 합니다</div>';
-  const gSets=_groups.map(g=>({name:g,set:new Set(countWords(_groupMap[g]).slice(0,30).map(w=>w[0])),counts:countWords(_groupMap[g])}));
+  const gSets=_groups.map(g=>({name:g,set:new Set(countWords(_gmap[g]).slice(0,30).map(w=>w[0])),counts:countWords(_gmap[g])}));
   const allWords=[...new Set(gSets.flatMap(g=>[...g.set]))];
   const common=allWords.map(word=>{
     const inG=gSets.filter(g=>g.set.has(word)).map(g=>g.name);
-    const total=gSets.reduce((s,g)=>{const f=g.counts.find(c=>c[0]===word);return s+(f?f[1]:0);},0);
-    return {word,inG,count:inG.length,total};
-  }).filter(w=>w.count>=2).sort((a,b)=>b.count-a.count||b.total-a.total);
-
+    return {word,inG,count:inG.length};
+  }).filter(w=>w.count>=2).sort((a,b)=>b.count-a.count);
   const allC=common.filter(w=>w.count===_groups.length);
   const halfC=common.filter(w=>w.count>=Math.ceil(_groups.length/2)&&w.count<_groups.length);
   const partC=common.filter(w=>w.count>=2&&w.count<Math.ceil(_groups.length/2));
-
   function sec(words,label,accent){
-    if(!words.length) return '';
-    const tags=words.slice(0,18).map(w=>{
-      const col=THEMES[classifyWord(w.word)]||THEMES['기타'];
-      const size=0.78+(w.count/_groups.length)*0.4;
-      return `<div style="display:inline-flex;flex-direction:column;align-items:center;margin:5px 7px">
-        <span style="font-size:${size}rem;font-weight:900;color:${col.bg};padding:4px 10px;background:${col.light};border-radius:8px;border:1.5px solid ${col.bg}50">${w.word}</span>
-        <span style="font-size:.6rem;color:var(--muted);margin-top:3px">${w.inG.join(' · ')}</span>
-      </div>`;
-    }).join('');
-    return `<div style="background:#fff;border-radius:14px;border:1px solid var(--border);padding:16px 18px;margin-bottom:12px">
-      <div style="font-size:.75rem;font-weight:700;color:${accent};margin-bottom:12px;padding-bottom:8px;border-bottom:2.5px solid ${accent}40">${label} <span style="font-size:.68rem;font-weight:400;color:var(--muted)">${words.length}개</span></div>
-      <div style="display:flex;flex-wrap:wrap;align-items:flex-end">${tags}</div>
-    </div>`;
+    if(!words.length)return '';
+    return `<div class="common-sec">
+      <div class="common-label" style="color:${accent};border-color:${accent}40">${label} <span style="font-size:.65rem;font-weight:400;color:var(--muted)">${words.length}개</span></div>
+      <div class="common-tags">${words.slice(0,18).map(w=>{
+        const col=THEMES[classify(w.word)]||THEMES['기타'];
+        const size=0.75+(w.count/_groups.length)*0.4;
+        return `<div class="ctag"><span class="ctag-word" style="font-size:${size}rem;background:${col.light};color:${col.bg};border-color:${col.bg}40">${w.word}</span>
+          <span class="ctag-sub">${w.inG.join('·')}</span></div>`;
+      }).join('')}</div></div>`;
   }
-  return `<div class="p-label">여러 기관에서 공통으로 언급된 키워드 — 핵심 의제</div>
-    ${sec(allC,'🔴 모든 기관 공통 — 전체 핵심 의제','#C9A84C')}
+  return `<div class="p-label">여러 기관에서 공통 언급 키워드 — 핵심 의제</div>
+    ${sec(allC,'🔴 모든 기관 공통','#C9A84C')}
     ${sec(halfC,'🟠 과반 기관 공통','#D85A30')}
     ${sec(partC,'🟡 일부 기관 공통','#4A8C5C')}`;
 }
 
-// ── 레이더 차트 ──
+// ── 레이더 ──
 function buildRadar(){
   const themes=Object.keys(THEMES).filter(t=>t!=='기타');
-  const gScores=_groups.map(g=>{
-    const counts=countWords(_groupMap[g]);
+  const gS=_groups.map(g=>{
+    const counts=countWords(_gmap[g]);
     const total=counts.reduce((s,w)=>s+w[1],0)||1;
-    const scores=themes.map(theme=>{
-      const kws=THEME_MAP[theme]||[];
-      const score=counts.filter(w=>kws.some(k=>w[0].includes(k))).reduce((s,w)=>s+w[1],0);
-      return Math.round(score/total*100);
-    });
-    return {name:g,scores};
+    return {name:g,scores:themes.map(t=>{
+      const ks=THEME_MAP[t]||[];
+      return Math.round(counts.filter(w=>ks.some(k=>w[0].includes(k))).reduce((s,w)=>s+w[1],0)/total*100);
+    })};
   });
-  const maxS=Math.max(...gScores.flatMap(g=>g.scores),1);
-  const W=340,H=300,cx=W/2,cy=H/2,r=110,N=themes.length;
-  const step=Math.PI*2/N;
+  const maxS=Math.max(...gS.flatMap(g=>g.scores),1);
+  const W=300,H=260,cx=W/2,cy=H/2,r=100,N=themes.length,step=Math.PI*2/N;
   function pt(i,v,m){const a=i*step-Math.PI/2,d=(v/m)*r;return[cx+d*Math.cos(a),cy+d*Math.sin(a)];}
-  let svg=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-height:300px">`;
-  [0.25,0.5,0.75,1].forEach(ratio=>{
-    const pts=themes.map((_,i)=>pt(i,maxS*ratio,maxS));
+  const pCols=['#1A3328','#B8860B','#185FA5','#6B3FA0','#C0392B','#8B2252'];
+  let svg=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-height:260px">`;
+  [.25,.5,.75,1].forEach(r2=>{
+    const pts=themes.map((_,i)=>pt(i,maxS*r2,maxS));
     svg+=`<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#D8E8DC" stroke-width="1"/>`;
   });
   themes.forEach((_,i)=>{const[x,y]=pt(i,maxS,maxS);svg+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#D8E8DC" stroke-width="1"/>`;});
-  const pCols=['#1A3328','#C9A84C','#185FA5','#6B3FA0','#D85A30','#993556'];
-  gScores.forEach((g,gi)=>{
+  gS.forEach((g,gi)=>{
     const pts=g.scores.map((s,i)=>pt(i,s,maxS));
-    const col=pCols[gi%pCols.length];
-    svg+=`<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="${col}20" stroke="${col}" stroke-width="2"/>`;
+    svg+=`<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="${pCols[gi%pCols.length]}20" stroke="${pCols[gi%pCols.length]}" stroke-width="2"/>`;
   });
   themes.forEach((t,i)=>{
-    const[x,y]=pt(i,maxS*1.2,maxS);
+    const[x,y]=pt(i,maxS*1.22,maxS);
     const col=THEMES[t]||THEMES['기타'];
-    svg+=`<text x="${x}" y="${y}" text-anchor="${x<cx-5?'end':x>cx+5?'start':'middle'}" font-size="9.5" fill="${col.bg}" font-family="Noto Sans KR,sans-serif" font-weight="700">${t}</text>`;
+    svg+=`<text x="${x}" y="${y}" text-anchor="${x<cx-5?'end':x>cx+5?'start':'middle'}" font-size="9" fill="${col.bg}" font-family="Noto Sans KR" font-weight="700">${t}</text>`;
   });
   svg+=`</svg>`;
-  const legend=gScores.map((g,i)=>`<div style="display:flex;align-items:center;gap:5px;font-size:.7rem;color:var(--muted)"><div style="width:14px;height:3px;background:${pCols[i%pCols.length]};border-radius:2px"></div>${g.name}</div>`).join('');
-  const hcells=gScores.map(g=>`<th style="text-align:center;padding:4px 6px;font-size:.68rem;color:var(--muted);font-weight:700">${g.name}</th>`).join('');
+  const legend=gS.map((g,i)=>`<div style="display:flex;align-items:center;gap:4px;font-size:.68rem;color:var(--muted)"><div style="width:12px;height:3px;background:${pCols[i%pCols.length]};border-radius:2px"></div>${g.name}</div>`).join('');
+  const hcells=gS.map(g=>`<th style="text-align:center;padding:3px 5px;font-size:.65rem;color:var(--muted)">${g.name}</th>`).join('');
   const trows=themes.map((t,i)=>{
     const col=THEMES[t]||THEMES['기타'];
-    const cells=gScores.map(g=>`<td style="text-align:center;padding:4px 6px;font-size:.75rem;font-weight:700">${g.scores[i]}</td>`).join('');
-    return `<tr><td style="padding:4px 10px"><span style="background:${col.bg};color:${col.fg};padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:700">${t}</span></td>${cells}</tr>`;
+    return `<tr><td style="padding:3px 8px"><span style="background:${col.bg};color:${col.fg};padding:1px 6px;border-radius:8px;font-size:.65rem;font-weight:700">${t}</span></td>
+      ${gS.map(g=>`<td style="text-align:center;padding:3px 5px;font-size:.72rem;font-weight:700">${g.scores[i]}</td>`).join('')}</tr>`;
   }).join('');
-  return `<div class="p-label">기관별 주제 분포 비교 · 수치=전체 의견 중 해당 주제 비율(%)</div>
-    <div style="background:#fff;border-radius:14px;border:1px solid var(--border);padding:16px;margin-bottom:12px">
-      ${svg}
-      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px">${legend}</div>
-    </div>
-    <div style="background:#fff;border-radius:14px;border:1px solid var(--border);padding:14px;overflow-x:auto">
-      <table style="width:100%;border-collapse:collapse"><thead><tr><th style="text-align:left;padding:4px 10px;font-size:.68rem;color:var(--muted)">주제</th>${hcells}</tr></thead><tbody>${trows}</tbody></table>
-    </div>`;
+  return `<div class="p-label">기관별 주제 분포 비교</div>
+    <div style="background:#fff;border-radius:14px;border:1px solid var(--border);padding:14px;margin-bottom:10px">
+      ${svg}<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px">${legend}</div></div>
+    <div style="background:#fff;border-radius:14px;border:1px solid var(--border);padding:12px;overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse"><thead><tr><th style="text-align:left;padding:3px 8px;font-size:.65rem;color:var(--muted)">주제</th>${hcells}</tr></thead><tbody>${trows}</tbody></table></div>`;
 }
 
-// ── 기관별 합본 ──
-function buildGroupPanel(tokens, groupName, subTables){
-  const wc=buildWC(tokens, groupName+' 합본');
-  const sub=subTables.map(s=>{
+// ── 기관 합본 ──
+function buildGroup(tokens,groupName,sub){
+  const wc=buildWC(tokens,groupName+' 합본');
+  const cards=sub.map(s=>{
     const sc=countWords(s.tokens).slice(0,8);
-    const tags=sc.map(w=>{const col=THEMES[classifyWord(w[0])]||THEMES['기타'];return `<span class="sub-tag" style="background:${col.bg};color:${col.fg}">${w[0]}</span>`;}).join('');
-    return `<div class="sub-card"><div class="sub-title">📋 ${s.name}</div><div class="sub-tags">${tags}</div></div>`;
+    return `<div class="sub-card"><div class="sub-title">📋 ${s.name}</div>
+      <div class="sub-tags">${sc.map(([w])=>{const col=THEMES[classify(w)]||THEMES['기타'];return `<span class="sub-tag" style="background:${col.bg};color:${col.fg}">${w}</span>`;}).join('')}</div></div>`;
   }).join('');
-  return wc+`<div class="sub-grid">${sub}</div>`;
+  return wc+`<div class="sub-grid">${cards}</div>`;
 }
 
-function goBack(){ document.getElementById('resultScreen').style.display='none'; document.getElementById('inputScreen').style.display='flex'; }
-function toggleFS(){ if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
-function showErr(m){const b=document.getElementById('errBox');b.textContent=m;b.style.display='block'}
-function hideErr(){document.getElementById('errBox').style.display='none'}
+function goBack(){document.getElementById('resultScreen').style.display='none';document.getElementById('inputScreen').style.display='flex';}
+function toggleFS(){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
+function showErr(m){const b=document.getElementById('errBox');b.textContent=m;b.style.display='block';}
+function hideErr(){document.getElementById('errBox').style.display='none';}
 </script>
 </body>
 </html>
